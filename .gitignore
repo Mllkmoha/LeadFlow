@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Prisma generated client
+/generated
+
+# AI/editor tool metadata
+/.agents/
+/.claude/
+/.cursor/
+/.devin/
