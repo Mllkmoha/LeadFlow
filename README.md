@@ -1,36 +1,137 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LeadFlow
+
+A full-stack CRM application for managing contacts, tracking leads, and organizing sales pipelines.
+
+LeadFlow is a personal development project built with Next.js, React, TypeScript, and PostgreSQL. It focuses on a clean dashboard experience and practical CRM workflows.
+
+## Features
+
+- **Dashboard** — Overview of contacts and lead activity.
+- **Contact management** — Create, view, edit, and delete contacts.
+- **Contact notes** — Add, edit, and delete notes associated with contacts.
+- **Search and filtering** — Find and filter contacts.
+- **Sales pipeline** — Visualize and organize leads by stage.
+- **Authentication** — Authentication integration with Auth.js.
+- **Responsive interface** — Modern application layout with reusable UI components.
+- **Form validation** — Type-safe validation with Zod.
+- **Data fetching** — Server APIs and client-side caching with TanStack Query.
+
+## Tech Stack
+
+**Frontend**
+- Next.js App Router
+- React
+- TypeScript
+- Tailwind CSS
+- Base UI and shadcn/ui
+- Lucide React
+- Motion
+
+**Backend and data**
+- Next.js Route Handlers
+- PostgreSQL
+- Prisma ORM
+- Auth.js
+- Zod
+
+**Tools**
+- Git and GitHub
+- ESLint
+- npm
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js compatible with the project's Next.js version
+- npm
+- PostgreSQL database
+- GitHub OAuth credentials if using GitHub sign-in
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Mllkmoha/LeadFlow.git
+cd LeadFlow
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a local environment file:
+
+```bash
+cp .env.example .env
+```
+
+Set the required values in `.env`:
+
+```env
+DATABASE_URL="your-database-connection-url"
+DIRECT_URL="your-direct-database-connection-url"
+AUTH_SECRET="your-generated-auth-secret"
+AUTH_GITHUB_ID="your-github-oauth-client-id"
+AUTH_GITHUB_SECRET="your-github-oauth-client-secret"
+```
+
+Use your own database connection details and OAuth credentials. Never commit `.env` or expose real secrets.
+
+Generate an authentication secret with:
+
+```bash
+openssl rand -base64 32
+```
+
+### 4. Set up the database
+
+Make sure PostgreSQL is configured and your environment variables are correct. Apply the database migrations using the Prisma setup configured for this project.
+
+### 5. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Build the application |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+src/
+├── app/
+│   ├── (auth)/          # Authentication pages
+│   ├── (dashboard)/     # Dashboard, contacts, and pipeline
+│   └── api/             # API route handlers
+├── components/          # Reusable UI components
+└── lib/                 # Shared utilities and validation
+prisma/                  # Database schema and related files
+public/                  # Static assets
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Status
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+LeadFlow is under active development. Features and setup requirements may change as the application evolves.
 
-## Deploy on Vercel
+## Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Mohamed Rafik Mellouk**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- GitHub: [@Mllkmoha](https://github.com/Mllkmoha)
+
+---
+
+Built as a practical full-stack web development project.
