@@ -1,3 +1,5 @@
+import { ActivityCompletionButton } from "./activity-completion-button";
+
 import Link from "next/link";
 import {
   Activity as ActivityIcon,
@@ -65,13 +67,22 @@ export default async function ActivitiesPage() {
   return (
     <PageTransition>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Activities
-          </h1>
-          <p className="mt-1 text-muted-foreground">
-            Keep track of calls, emails, meetings, and tasks.
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Activities
+            </h1>
+            <p className="mt-1 text-muted-foreground">
+              Keep track of calls, emails, meetings, and tasks.
+            </p>
+          </div>
+
+          <Link
+            href="/activities/new"
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            + New Activity
+          </Link>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -189,6 +200,10 @@ export default async function ActivitiesPage() {
                         )}
                         {activity.completed ? "Completed" : "Pending"}
                       </span>
+                      <ActivityCompletionButton
+                        activityId={activity.id}
+                        completed={activity.completed}
+                      />
                     </div>
                   </div>
                 );
