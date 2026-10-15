@@ -131,7 +131,11 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
   }
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext
+      id="pipeline-dnd-context"
+      sensors={sensors}
+      onDragEnd={handleDragEnd}
+    >
       <div className="grid gap-4 lg:grid-cols-4">
         {columns.map((column) => (
           <PipelineColumn
