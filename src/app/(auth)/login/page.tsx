@@ -1,4 +1,7 @@
+"use client";
+
 import { ChartNoAxesCombined, Users } from "lucide-react";
+import { motion } from "motion/react";
 import { LoginButton } from "./login-button";
 import Image from "next/image";
 
@@ -8,16 +11,21 @@ export default function LoginPage() {
       <div className="pointer-events-none absolute -left-40 -top-40 size-96 rounded-full bg-primary/5 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 size-96 rounded-full bg-primary/5 blur-3xl" />
 
-      <div className="relative grid w-full max-w-5xl overflow-hidden rounded-3xl border border-border bg-card shadow-xl lg:grid-cols-2">
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative grid w-full max-w-5xl overflow-hidden rounded-3xl border border-border bg-card shadow-xl lg:grid-cols-2"
+      >
         <section className="flex flex-col justify-between p-8 sm:p-12">
           <div>
             <div className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+              <div>
                 <Image
                   src="/leadFlow-icon-color.png"
                   alt="LeadFlow"
-                  width={30}
-                  height={30}
+                  width={40}
+                  height={40}
                   className="object-contain"
                 />
               </div>
@@ -68,17 +76,33 @@ export default function LoginPage() {
                 GET STARTED
               </p>
 
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+              <motion.h2
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-3 text-3xl font-semibold tracking-tight"
+              >
                 Welcome back
-              </h2>
+              </motion.h2>
 
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="mt-3 text-sm leading-6 text-muted-foreground"
+              >
                 Sign in securely with your GitHub account to access your
                 workspace.
-              </p>
+              </motion.p>
             </div>
 
-            <LoginButton />
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <LoginButton />
+            </motion.div>
 
             <p className="mt-6 text-center text-xs leading-5 text-muted-foreground">
               By continuing, you’ll be redirected to GitHub to authorize your
@@ -86,7 +110,7 @@ export default function LoginPage() {
             </p>
           </div>
         </section>
-      </div>
+      </motion.div>
     </main>
   );
 }

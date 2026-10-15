@@ -7,6 +7,8 @@ import {
   Users,
 } from "lucide-react";
 
+import Image from "next/image";
+
 const navigation = [
   {
     label: "Dashboard",
@@ -39,6 +41,14 @@ export function Sidebar() {
   return (
     <aside className="hidden w-64 border-r bg-background md:flex md:flex-col">
       <div className="flex h-16 items-center border-b px-6">
+        <Image
+          src="/leadFlow-icon-color.png"
+          alt="LeadFlow"
+          width={40}
+          height={40}
+          className="object-contain"
+        />
+
         <Link href="/" className="text-xl font-semibold">
           LeadFlow
         </Link>
