@@ -4,6 +4,7 @@ import { ChartNoAxesCombined, Users } from "lucide-react";
 import { motion } from "motion/react";
 import { LoginButton } from "./login-button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -19,19 +20,21 @@ export default function LoginPage() {
       >
         <section className="flex flex-col justify-between p-8 sm:p-12">
           <div>
-            <div className="flex items-center gap-3">
-              <div>
-                <Image
-                  src="/leadFlow-icon-color.png"
-                  alt="LeadFlow"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
-              </div>
-              <span className="text-xl font-semibold tracking-tight">
-                LeadFlow
-              </span>
+            <div>
+              <Link href="/" className="flex items-center gap-2">
+                <div>
+                  <Image
+                    src="/leadFlow-icon-color.png"
+                    alt="LeadFlow"
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
+                </div>
+                <span className="text-xl font-semibold tracking-tight">
+                  LeadFlow
+                </span>
+              </Link>
             </div>
 
             <div className="mt-20 max-w-md">
