@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { DeleteButton } from "@/components/delete-button";
 
 interface Note {
   id: string;
@@ -178,15 +179,7 @@ export function NotesSection({ contactId }: NotesSectionProps) {
   }
 
   function handleDelete(noteId: string) {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this note?",
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    deleteNoteMutation.mutate(noteId);
+  deleteNoteMutation.mutate(noteId);
   }
 
   const notes = notesQuery.data ?? [];
@@ -297,14 +290,15 @@ export function NotesSection({ contactId }: NotesSectionProps) {
                         Edit
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(note.id)}
-                        disabled={isDeleting(note.id)}
-                        className="text-sm font-medium text-destructive transition-colors hover:text-destructive/80 disabled:opacity-50"
-                      >
-                        {isDeleting(note.id) ? "Deleting..." : "Delete"}
-                      </button>
+                      <DeleteButton
+                        confirmMessage="Are you sure you want to delete this note?"
+                        onDelete={() => handleDelete(note.id)}
+                        isDeleting={isDeleting(note.id)}
+                        disabled={
+                          deleteNoteMutation.isPending &&
+                          !isDeleting(note.id)
+                        }
+                      />
                     </div>
                   </>
                 )}

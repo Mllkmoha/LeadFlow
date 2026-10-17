@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { DeleteButton } from "@/components/delete-button";
 
 type DeleteContactButtonProps = {
   contactId: string;
@@ -14,13 +15,8 @@ export function DeleteContactButton({
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this contact?",
-    );
+    if (isDeleting) return;
 
-    if (!confirmed) {
-      return;
-    }
 
     setIsDeleting(true);
 
@@ -42,13 +38,10 @@ export function DeleteContactButton({
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleDelete}
-      disabled={isDeleting}
-      className="rounded-lg border border-destructive/50 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {isDeleting ? "Deleting..." : "Delete"}
-    </button>
+    <DeleteButton
+      confirmMessage="Are you sure you want to delete this contact?"
+      isDeleting={isDeleting}
+      onDelete={handleDelete}
+    />
   );
 }
