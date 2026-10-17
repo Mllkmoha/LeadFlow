@@ -14,3 +14,7 @@ export const activitySchema = z.object({
     "Invalid due date",
   ),
 });
+
+export const updateActivitySchema = activitySchema.partial().extend({
+  completed: z.boolean().optional(),
+});
