@@ -1,4 +1,5 @@
 import { ActivityCompletionButton } from "./activity-completion-button";
+import { DeleteActivityButton } from "./delete-activity-button";
 
 import Link from "next/link";
 import {
@@ -204,6 +205,7 @@ export default async function ActivitiesPage() {
                         activityId={activity.id}
                         completed={activity.completed}
                       />
+                      <DeleteActivityButton activityId={activity.id} />
                     </div>
                   </div>
                 );
