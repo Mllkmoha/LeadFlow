@@ -1,15 +1,48 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { z } from "zod";
-
-const completionSchema = z.object({
-  completed: z.boolean(),
-});
+import { updateActivitySchema } from "@/lib/validations/activity";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
 };
+
+export async function GET(_request: Request, { params }: RouteContext) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+
+    const activity = await prisma.activity.findFirst({
+      where: {
+        id,
+        contact: {
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (!activity) {
+      return NextResponse.json(
+        { error: "Activity not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(activity);
+  } catch (error) {
+    console.error("GET ACTIVITY ERROR:", error);
+
+    return NextResponse.json(
+      { error: "Failed to load activity" },
+      { status: 500 },
+    );
+  }
+}
 
 export async function PATCH(
   request: Request,
@@ -24,13 +57,32 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const result = completionSchema.safeParse(body);
+    const result = updateActivitySchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "Invalid completion status" },
+        { error: "Invalid activity data", details: result.error.flatten() },
         { status: 400 },
       );
+    }
+
+    if (result.data.contactId) {
+      const contact = await prisma.contact.findFirst({
+        where: {
+          id: result.data.contactId,
+          userId: session.user.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!contact) {
+        return NextResponse.json(
+          { error: "Contact not found" },
+          { status: 404 },
+        );
+      }
     }
 
     const activity = await prisma.activity.findFirst({
@@ -57,7 +109,12 @@ export async function PATCH(
         id: activity.id,
       },
       data: {
-        completed: result.data.completed,
+        ...result.data,
+        dueDate: result.data.dueDate
+          ? new Date(result.data.dueDate)
+          : result.data.dueDate === ""
+            ? null
+            : undefined,
       },
     });
 
