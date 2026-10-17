@@ -170,7 +170,7 @@ export default async function ActivitiesPage() {
                       </div>
                     </div>
 
-                    <div className="flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    <div className="relative z-20 isolate flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
                       {activity.dueDate && (
                         <span className="flex items-center gap-1.5">
                           {activity.dueDate < new Date() &&
