@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -40,9 +39,7 @@ export function ActivityCompletionButton({
       router.refresh();
     } catch (error) {
       setError(
-        error instanceof Error
-          ? error.message
-          : "Failed to update activity.",
+        error instanceof Error ? error.message : "Failed to update activity.",
       );
     } finally {
       setIsUpdating(false);
@@ -55,19 +52,17 @@ export function ActivityCompletionButton({
         type="button"
         onClick={toggleCompletion}
         disabled={isUpdating}
-        aria-label={completed ? "Reopen activity" : "Mark activity as completed"}
-        className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        aria-label={
+          completed ? "Reopen activity" : "Mark activity as completed"
+        }
+        className="inline-flex h-9 items-center justify-center rounded-lg border border-emerald-600/30 bg-emerald-600/10 px-3 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-600/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400"
       >
         {completed ? (
           <CheckCircle2 className="size-4" />
         ) : (
           <Circle className="size-4" />
         )}
-        {isUpdating
-          ? "Updating..."
-          : completed
-            ? "Reopen"
-            : "Mark completed"}
+        {isUpdating ? "Updating..." : completed ? "Reopen" : "Mark completed"}
       </button>
 
       {error && <p className="text-xs text-destructive">{error}</p>}

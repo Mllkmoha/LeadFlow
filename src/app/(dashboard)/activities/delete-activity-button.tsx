@@ -15,6 +15,8 @@ export function DeleteActivityButton({
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
+    if (isDeleting) return;
+
     const confirmed = window.confirm(
       "Are you sure you want to delete this activity?",
     );
@@ -31,13 +33,23 @@ export function DeleteActivityButton({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete activity");
+        const result: { error?: string } = await response
+          .json()
+          .catch(() => ({}));
+
+        throw new Error(result.error ?? `Delete failed (${response.status})`);
       }
 
       router.refresh();
     } catch (error) {
       console.error("Error deleting activity:", error);
-      window.alert("Failed to delete activity. Please try again.");
+
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to delete activity. Please try again.",
+      );
+    } finally {
       setIsDeleting(false);
     }
   }
@@ -47,7 +59,7 @@ export function DeleteActivityButton({
       type="button"
       onClick={handleDelete}
       disabled={isDeleting}
-      className="rounded-lg border border-destructive/50 px-3 py-1.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex h-9 items-center justify-center rounded-lg border border-red-600/30 bg-red-600/5 px-3 text-sm font-medium text-red-700 transition-colors hover:border-red-600/50 hover:bg-red-600/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-red-400"
     >
       {isDeleting ? "Deleting..." : "Delete"}
     </button>

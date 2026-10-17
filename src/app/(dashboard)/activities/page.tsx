@@ -201,6 +201,12 @@ export default async function ActivitiesPage() {
                         )}
                         {activity.completed ? "Completed" : "Pending"}
                       </span>
+                      <Link
+                        href={`/activities/${activity.id}/edit`}
+                        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
+                        Edit
+                      </Link>
                       <ActivityCompletionButton
                         activityId={activity.id}
                         completed={activity.completed}
