@@ -17,12 +17,16 @@ export default async function ContactsPage({
   searchParams,
 }: ContactsPageProps) {
   const session = await auth();
-
   const { search, status } = await searchParams;
 
   if (!session?.user?.id) {
     return null;
   }
+
+  const validStatuses = Object.values(ContactStatus);
+  const selectedStatus = validStatuses.find(
+    (validStatus) => validStatus === status,
+  );
 
   const contacts = await prisma.contact.findMany({
     where: {
@@ -65,9 +69,9 @@ export default async function ContactsPage({
           }
         : {}),
 
-      ...(status
+      ...(selectedStatus
         ? {
-            status: status as ContactStatus,
+            status: selectedStatus,
           }
         : {}),
     },

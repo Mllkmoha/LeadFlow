@@ -14,10 +14,7 @@ const noteSchema = z.object({
   content: z.string().trim().min(1, "Note content is required"),
 });
 
-export async function PATCH(
-  request: Request,
-  { params }: RouteContext,
-) {
+export async function PATCH(request: Request, { params }: RouteContext) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -51,20 +48,25 @@ export async function PATCH(
     });
 
     if (!note) {
-      return NextResponse.json(
-        { error: "Note not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
     }
 
-    const updatedNote = await prisma.note.update({
+    const updatedNote = await prisma.note.updateMany({
       where: {
         id: noteId,
+        contactId: id,
+        contact: {
+          userId: session.user.id,
+        },
       },
       data: {
         content: result.data.content,
       },
     });
+
+    if (updatedNote.count === 0) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    }
 
     return NextResponse.json(updatedNote);
   } catch (error) {
@@ -77,10 +79,7 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  _request: Request,
-  { params }: RouteContext,
-) {
+export async function DELETE(_request: Request, { params }: RouteContext) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -101,17 +100,22 @@ export async function DELETE(
     });
 
     if (!note) {
-      return NextResponse.json(
-        { error: "Note not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
     }
 
-    await prisma.note.delete({
+    const deletedNote = await prisma.note.deleteMany({
       where: {
         id: noteId,
+        contactId: id,
+        contact: {
+          userId: session.user.id,
+        },
       },
     });
+
+    if (deletedNote.count === 0) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    }
 
     return NextResponse.json({
       message: "Note deleted successfully",
