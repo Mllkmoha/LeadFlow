@@ -65,6 +65,9 @@ export default async function ActivitiesPage() {
 
   const pendingCount = activities.length - completedCount;
 
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
   return (
     <PageTransition>
       <div className="space-y-6">
@@ -173,8 +176,7 @@ export default async function ActivitiesPage() {
                     <div className="relative z-20 isolate flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
                       {activity.dueDate && (
                         <span className="flex items-center gap-1.5">
-                          {activity.dueDate < new Date() &&
-                          !activity.completed ? (
+                          {activity.dueDate < today && !activity.completed ? (
                             <Clock3 className="size-4" />
                           ) : (
                             <CalendarDays className="size-4" />
