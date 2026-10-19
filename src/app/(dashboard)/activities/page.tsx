@@ -1,6 +1,7 @@
 import { ActivityCompletionButton } from "./activity-completion-button";
 import { DeleteActivityButton } from "./delete-activity-button";
 import { ActivityFilters } from "./activity-filters";
+import { ActivitySearch } from "./activity-search";
 
 import Link from "next/link";
 import {
@@ -37,10 +38,12 @@ type ActivityFilter = "ALL" | "PENDING" | "COMPLETED" | "OVERDUE";
 export default async function ActivitiesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string }>;
+  searchParams: Promise<{ filter?: string; search?: string }>;
 }) {
-  const { filter: requestedFilter } = await searchParams;
+  const { filter: requestedFilter, search: requestedSearch } =
+    await searchParams;
 
+  const search = requestedSearch?.trim().toLowerCase() ?? "";
   const validFilters: ActivityFilter[] = [
     "ALL",
     "PENDING",
@@ -89,18 +92,31 @@ export default async function ActivitiesPage({
   today.setUTCHours(0, 0, 0, 0);
 
   const filteredActivities = activities.filter((activity) => {
-    if (activeFilter === "PENDING") return !activity.completed;
-    if (activeFilter === "COMPLETED") return activity.completed;
+    if (activeFilter === "PENDING" && activity.completed) return false;
+    if (activeFilter === "COMPLETED" && !activity.completed) return false;
 
-    if (activeFilter === "OVERDUE") {
-      return (
-        !activity.completed &&
-        activity.dueDate !== null &&
-        activity.dueDate < today
-      );
+    if (
+      activeFilter === "OVERDUE" &&
+      (activity.completed ||
+        activity.dueDate === null ||
+        activity.dueDate >= today)
+    ) {
+      return false;
     }
 
-    return true;
+    if (!search) return true;
+
+    const searchableText = [
+      activity.title,
+      activity.content ?? "",
+      activity.contact.firstName,
+      activity.contact.lastName,
+      activity.contact.company ?? "",
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return searchableText.includes(search);
   });
 
   return (
@@ -123,7 +139,6 @@ export default async function ActivitiesPage({
             + New Activity
           </Link>
         </div>
-
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Total activities</p>
@@ -138,9 +153,8 @@ export default async function ActivitiesPage({
             <p className="mt-2 text-2xl font-semibold">{completedCount}</p>
           </div>
         </div>
-
         <ActivityFilters value={activeFilter} />
-
+        <ActivitySearch />
         <section className="overflow-hidden rounded-xl border bg-card">
           <div className="border-b p-5">
             <h2 className="font-semibold">
@@ -163,12 +177,16 @@ export default async function ActivitiesPage({
               <h3 className="font-semibold">
                 {activities.length === 0
                   ? "No activities yet"
-                  : "No activities match this filter"}
+                  : search
+                    ? "No activities match your search"
+                    : "No activities match this filter"}
               </h3>
-              <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {activities.length === 0
                   ? "Activities associated with your contacts will appear here."
-                  : "Try selecting another filter to see your activities."}
+                  : search
+                    ? "Try a different search term or adjust your status filter."
+                    : "Try selecting another filter to see your activities."}
               </p>
               <Link
                 href="/contacts"
@@ -220,7 +238,7 @@ export default async function ActivitiesPage({
                       </div>
                     </div>
 
-                    <div className="relative z-20 isolate flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    <div className="flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
                       {activity.dueDate && (
                         <span className="flex items-center gap-1.5">
                           {activity.dueDate < today && !activity.completed ? (
