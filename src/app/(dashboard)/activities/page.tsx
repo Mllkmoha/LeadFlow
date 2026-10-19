@@ -1,7 +1,9 @@
+
 import { ActivityCompletionButton } from "./activity-completion-button";
 import { DeleteActivityButton } from "./delete-activity-button";
 import { ActivityFilters } from "./activity-filters";
 import { ActivitySearch } from "./activity-search";
+import { ActivitySort } from "./activity-sort";
 
 import Link from "next/link";
 import {
@@ -34,16 +36,25 @@ const activityLabels = {
 };
 
 type ActivityFilter = "ALL" | "PENDING" | "COMPLETED" | "OVERDUE";
+type ActivitySortOption = "NEWEST" | "OLDEST" | "DUE_DATE" | "TITLE";
 
 export default async function ActivitiesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string; search?: string }>;
+  searchParams: Promise<{
+    filter?: string;
+    search?: string;
+    sort?: string;
+  }>;
 }) {
-  const { filter: requestedFilter, search: requestedSearch } =
-    await searchParams;
+  const {
+    filter: requestedFilter,
+    search: requestedSearch,
+    sort: requestedSort,
+  } = await searchParams;
 
   const search = requestedSearch?.trim().toLowerCase() ?? "";
+
   const validFilters: ActivityFilter[] = [
     "ALL",
     "PENDING",
@@ -51,9 +62,24 @@ export default async function ActivitiesPage({
     "OVERDUE",
   ];
 
-  const activeFilter = validFilters.includes(requestedFilter as ActivityFilter)
+  const activeFilter = validFilters.includes(
+    requestedFilter as ActivityFilter,
+  )
     ? (requestedFilter as ActivityFilter)
     : "ALL";
+
+  const validSorts: ActivitySortOption[] = [
+    "NEWEST",
+    "OLDEST",
+    "DUE_DATE",
+    "TITLE",
+  ];
+
+  const activeSort: ActivitySortOption = validSorts.includes(
+    requestedSort as ActivitySortOption,
+  )
+    ? (requestedSort as ActivitySortOption)
+    : "NEWEST";
 
   const session = await auth();
 
@@ -119,6 +145,26 @@ export default async function ActivitiesPage({
     return searchableText.includes(search);
   });
 
+  const sortedActivities = [...filteredActivities].sort((a, b) => {
+    switch (activeSort) {
+      case "OLDEST":
+        return a.createdAt.getTime() - b.createdAt.getTime();
+
+      case "DUE_DATE":
+        if (a.dueDate === null && b.dueDate === null) return 0;
+        if (a.dueDate === null) return 1;
+        if (b.dueDate === null) return -1;
+        return a.dueDate.getTime() - b.dueDate.getTime();
+
+      case "TITLE":
+        return a.title.localeCompare(b.title);
+
+      case "NEWEST":
+      default:
+        return b.createdAt.getTime() - a.createdAt.getTime();
+    }
+  });
+
   return (
     <PageTransition>
       <div className="space-y-6">
@@ -139,22 +185,28 @@ export default async function ActivitiesPage({
             + New Activity
           </Link>
         </div>
+
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Total activities</p>
             <p className="mt-2 text-2xl font-semibold">{activities.length}</p>
           </div>
+
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Pending</p>
             <p className="mt-2 text-2xl font-semibold">{pendingCount}</p>
           </div>
+
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Completed</p>
             <p className="mt-2 text-2xl font-semibold">{completedCount}</p>
           </div>
         </div>
+
         <ActivityFilters value={activeFilter} />
         <ActivitySearch />
+        <ActivitySort value={activeSort} />
+
         <section className="overflow-hidden rounded-xl border bg-card">
           <div className="border-b p-5">
             <h2 className="font-semibold">
@@ -164,16 +216,18 @@ export default async function ActivitiesPage({
                   activeFilter.slice(1).toLowerCase() +
                   " activities"}
             </h2>
+
             <p className="mt-1 text-sm text-muted-foreground">
               Your latest customer-related activities.
             </p>
           </div>
 
-          {filteredActivities.length === 0 ? (
+          {sortedActivities.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-16 text-center">
               <div className="mb-4 rounded-full bg-muted p-4">
                 <ActivityIcon className="size-7 text-muted-foreground" />
               </div>
+
               <h3 className="font-semibold">
                 {activities.length === 0
                   ? "No activities yet"
@@ -181,6 +235,7 @@ export default async function ActivitiesPage({
                     ? "No activities match your search"
                     : "No activities match this filter"}
               </h3>
+
               <p className="text-sm text-muted-foreground">
                 {activities.length === 0
                   ? "Activities associated with your contacts will appear here."
@@ -188,6 +243,7 @@ export default async function ActivitiesPage({
                     ? "Try a different search term or adjust your status filter."
                     : "Try selecting another filter to see your activities."}
               </p>
+
               <Link
                 href="/contacts"
                 className="mt-5 text-sm font-medium underline underline-offset-4"
@@ -197,7 +253,7 @@ export default async function ActivitiesPage({
             </div>
           ) : (
             <div className="divide-y">
-              {filteredActivities.map((activity) => {
+              {sortedActivities.map((activity) => {
                 const Icon = activityIcons[activity.type];
                 const label = activityLabels[activity.type];
 
@@ -246,6 +302,7 @@ export default async function ActivitiesPage({
                           ) : (
                             <CalendarDays className="size-4" />
                           )}
+
                           {activity.dueDate.toLocaleDateString("en-GB", {
                             day: "numeric",
                             month: "short",
@@ -266,18 +323,22 @@ export default async function ActivitiesPage({
                         ) : (
                           <Circle className="size-4" />
                         )}
+
                         {activity.completed ? "Completed" : "Pending"}
                       </span>
+
                       <Link
                         href={`/activities/${activity.id}/edit`}
                         className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
                         Edit
                       </Link>
+
                       <ActivityCompletionButton
                         activityId={activity.id}
                         completed={activity.completed}
                       />
+
                       <DeleteActivityButton activityId={activity.id} />
                     </div>
                   </div>
