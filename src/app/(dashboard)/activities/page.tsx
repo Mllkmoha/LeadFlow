@@ -1,5 +1,6 @@
 import { ActivityCompletionButton } from "./activity-completion-button";
 import { DeleteActivityButton } from "./delete-activity-button";
+import { ActivityFilters } from "./activity-filters";
 
 import Link from "next/link";
 import {
@@ -31,7 +32,26 @@ const activityLabels = {
   TASK: "Task",
 };
 
-export default async function ActivitiesPage() {
+type ActivityFilter = "ALL" | "PENDING" | "COMPLETED" | "OVERDUE";
+
+export default async function ActivitiesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
+  const { filter: requestedFilter } = await searchParams;
+
+  const validFilters: ActivityFilter[] = [
+    "ALL",
+    "PENDING",
+    "COMPLETED",
+    "OVERDUE",
+  ];
+
+  const activeFilter = validFilters.includes(requestedFilter as ActivityFilter)
+    ? (requestedFilter as ActivityFilter)
+    : "ALL";
+
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -68,6 +88,21 @@ export default async function ActivitiesPage() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
+  const filteredActivities = activities.filter((activity) => {
+    if (activeFilter === "PENDING") return !activity.completed;
+    if (activeFilter === "COMPLETED") return activity.completed;
+
+    if (activeFilter === "OVERDUE") {
+      return (
+        !activity.completed &&
+        activity.dueDate !== null &&
+        activity.dueDate < today
+      );
+    }
+
+    return true;
+  });
+
   return (
     <PageTransition>
       <div className="space-y-6">
@@ -94,34 +129,46 @@ export default async function ActivitiesPage() {
             <p className="text-sm text-muted-foreground">Total activities</p>
             <p className="mt-2 text-2xl font-semibold">{activities.length}</p>
           </div>
-
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Pending</p>
             <p className="mt-2 text-2xl font-semibold">{pendingCount}</p>
           </div>
-
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Completed</p>
             <p className="mt-2 text-2xl font-semibold">{completedCount}</p>
           </div>
         </div>
 
+        <ActivityFilters value={activeFilter} />
+
         <section className="overflow-hidden rounded-xl border bg-card">
           <div className="border-b p-5">
-            <h2 className="font-semibold">All activities</h2>
+            <h2 className="font-semibold">
+              {activeFilter === "ALL"
+                ? "All activities"
+                : activeFilter.charAt(0) +
+                  activeFilter.slice(1).toLowerCase() +
+                  " activities"}
+            </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Your latest customer-related activities.
             </p>
           </div>
 
-          {activities.length === 0 ? (
+          {filteredActivities.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-16 text-center">
               <div className="mb-4 rounded-full bg-muted p-4">
                 <ActivityIcon className="size-7 text-muted-foreground" />
               </div>
-              <h3 className="font-semibold">No activities yet</h3>
+              <h3 className="font-semibold">
+                {activities.length === 0
+                  ? "No activities yet"
+                  : "No activities match this filter"}
+              </h3>
               <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                Activities associated with your contacts will appear here.
+                {activities.length === 0
+                  ? "Activities associated with your contacts will appear here."
+                  : "Try selecting another filter to see your activities."}
               </p>
               <Link
                 href="/contacts"
@@ -132,7 +179,7 @@ export default async function ActivitiesPage() {
             </div>
           ) : (
             <div className="divide-y">
-              {activities.map((activity) => {
+              {filteredActivities.map((activity) => {
                 const Icon = activityIcons[activity.type];
                 const label = activityLabels[activity.type];
 
