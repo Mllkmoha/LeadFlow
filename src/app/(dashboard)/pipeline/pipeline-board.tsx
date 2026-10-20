@@ -111,11 +111,16 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
-    if (!over) {
+    if (!over || updateStatusMutation.isPending) {
       return;
     }
 
     const contactId = String(active.id);
+
+    if (!columns.some((column) => column.id === over.id)) {
+      return;
+    }
+
     const newStatus = over.id as ContactStatus;
 
     const contact = items.find((item) => item.id === contactId);
@@ -146,6 +151,12 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
           />
         ))}
       </div>
+
+      {updateStatusMutation.isPending && (
+        <p role="status" className="mt-4 text-sm text-muted-foreground">
+          Saving pipeline changes...
+        </p>
+      )}
 
       {updateStatusMutation.error && (
         <p className="mt-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
