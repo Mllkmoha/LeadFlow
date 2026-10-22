@@ -94,6 +94,33 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
       return data as Contact;
     },
 
+    onMutate: ({ contactId, status }) => {
+      let previousStatus: ContactStatus | undefined;
+
+      setItems((current) => {
+        const contact = current.find((item) => item.id === contactId);
+        previousStatus = contact?.status;
+
+        return current.map((item) =>
+          item.id === contactId ? { ...item, status } : item,
+        );
+      });
+
+      return { contactId, previousStatus };
+    },
+
+    onError: (_error, _variables, context) => {
+      if (!context || !context.previousStatus) return;
+
+      setItems((current) =>
+        current.map((contact) =>
+          contact.id === context.contactId
+            ? { ...contact, status: context.previousStatus! }
+            : contact,
+        ),
+      );
+    },
+
     onSuccess: (updatedContact) => {
       setItems((current) =>
         current.map((contact) =>
