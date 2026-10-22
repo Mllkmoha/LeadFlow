@@ -68,7 +68,21 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       return NextResponse.json({ error: "Note not found" }, { status: 404 });
     }
 
-    return NextResponse.json(updatedNote);
+    const noteAfterUpdate = await prisma.note.findFirst({
+      where: {
+        id: noteId,
+        contactId: id,
+        contact: {
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (!noteAfterUpdate) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(noteAfterUpdate);
   } catch (error) {
     console.error("UPDATE NOTE ERROR:", error);
 
