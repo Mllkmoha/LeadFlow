@@ -72,6 +72,8 @@ export function ContactForm() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (createContactMutation.isPending) return;
+
     createContactMutation.mutate(formData);
   }
 
