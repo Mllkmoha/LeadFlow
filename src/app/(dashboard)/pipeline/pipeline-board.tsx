@@ -2,6 +2,8 @@
 
 import {
   DndContext,
+  DragOverlay,
+  DragStartEvent,
   DragEndEvent,
   PointerSensor,
   useDraggable,
@@ -60,6 +62,7 @@ const columns: {
 
 export function PipelineBoard({ contacts }: PipelineBoardProps) {
   const [items, setItems] = useState(contacts);
+  const [activeContact, setActiveContact] = useState<Contact | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -135,7 +138,14 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
     },
   });
 
+  function handleDragStart(event: DragStartEvent) {
+    const contact = items.find((item) => item.id === String(event.active.id));
+
+    setActiveContact(contact ?? null);
+  }
+
   function handleDragEnd(event: DragEndEvent) {
+    setActiveContact(null);
     const { active, over } = event;
 
     if (!over || updateStatusMutation.isPending) {
@@ -167,6 +177,8 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
       id="pipeline-dnd-context"
       sensors={sensors}
       onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      onDragCancel={() => setActiveContact(null)}
     >
       <div className="grid gap-4 lg:grid-cols-4">
         {columns.map((column) => (
@@ -178,6 +190,26 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
           />
         ))}
       </div>
+
+      <DragOverlay>
+        {activeContact ? (
+          <div className="rotate-2 rounded-lg border bg-background p-4 shadow-lg">
+            <p className="font-medium">
+              {activeContact.firstName} {activeContact.lastName}
+            </p>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              {activeContact.email}
+            </p>
+
+            {activeContact.company && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {activeContact.company}
+              </p>
+            )}
+          </div>
+        ) : null}
+      </DragOverlay>
 
       {updateStatusMutation.isPending && (
         <p role="status" className="mt-4 text-sm text-muted-foreground">
