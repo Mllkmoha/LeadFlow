@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   DndContext,
   DragOverlay,
@@ -293,15 +295,27 @@ function PipelineCard({ contact }: PipelineCardProps) {
         isDragging ? "opacity-50" : ""
       }`}
     >
-      <p className="font-medium">
-        {contact.firstName} {contact.lastName}
-      </p>
+      <Link
+        href={`/contacts/${contact.id}`}
+        className="block"
+        onClick={(event) => {
+          if (isDragging) {
+            event.preventDefault();
+          }
+        }}
+      >
+        <p className="font-medium">
+          {contact.firstName} {contact.lastName}
+        </p>
 
-      <p className="mt-1 text-sm text-muted-foreground">{contact.email}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{contact.email}</p>
 
-      {contact.company && (
-        <p className="mt-2 text-xs text-muted-foreground">{contact.company}</p>
-      )}
+        {contact.company && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            {contact.company}
+          </p>
+        )}
+      </Link>
     </div>
   );
 }
