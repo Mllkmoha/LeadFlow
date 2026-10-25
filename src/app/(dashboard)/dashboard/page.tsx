@@ -177,18 +177,21 @@ export default async function DashboardPage() {
             title="Overdue"
             value={String(overdueActivities)}
             description="Past-due activities"
+            href="/activities?filter=OVERDUE"
           />
 
           <StatCard
             title="Due Today"
             value={String(dueTodayActivities)}
             description="Activities due today"
+            href="/activities?filter=TODAY"
           />
 
           <StatCard
             title="Upcoming"
             value={String(upcomingActivities)}
             description="Future activities"
+            href="/activities?filter=UPCOMING"
           />
         </div>
 

@@ -1,4 +1,10 @@
-type ActivityFilter = "ALL" | "PENDING" | "COMPLETED" | "OVERDUE";
+type ActivityFilter =
+  | "ALL"
+  | "PENDING"
+  | "COMPLETED"
+  | "OVERDUE"
+  | "TODAY"
+  | "UPCOMING";
 
 type ActivityFiltersProps = {
   value: ActivityFilter;
@@ -9,6 +15,8 @@ const filters: { label: string; value: ActivityFilter }[] = [
   { label: "Pending", value: "PENDING" },
   { label: "Completed", value: "COMPLETED" },
   { label: "Overdue", value: "OVERDUE" },
+  { label: "Due Today", value: "TODAY" },
+{ label: "Upcoming", value: "UPCOMING" },
 ];
 
 export function ActivityFilters({ value }: ActivityFiltersProps) {

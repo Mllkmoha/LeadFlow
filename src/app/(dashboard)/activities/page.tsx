@@ -1,4 +1,3 @@
-
 import { ActivityCompletionButton } from "./activity-completion-button";
 import { DeleteActivityButton } from "./delete-activity-button";
 import { ActivityFilters } from "./activity-filters";
@@ -35,7 +34,15 @@ const activityLabels = {
   TASK: "Task",
 };
 
-type ActivityFilter = "ALL" | "PENDING" | "COMPLETED" | "OVERDUE";
+
+type ActivityFilter =
+  | "ALL"
+  | "PENDING"
+  | "COMPLETED"
+  | "OVERDUE"
+  | "TODAY"
+  | "UPCOMING";
+
 type ActivitySortOption = "NEWEST" | "OLDEST" | "DUE_DATE" | "TITLE";
 
 export default async function ActivitiesPage({
@@ -60,11 +67,11 @@ export default async function ActivitiesPage({
     "PENDING",
     "COMPLETED",
     "OVERDUE",
+    "TODAY",
+    "UPCOMING",
   ];
 
-  const activeFilter = validFilters.includes(
-    requestedFilter as ActivityFilter,
-  )
+  const activeFilter = validFilters.includes(requestedFilter as ActivityFilter)
     ? (requestedFilter as ActivityFilter)
     : "ALL";
 
@@ -117,6 +124,9 @@ export default async function ActivitiesPage({
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
   const filteredActivities = activities.filter((activity) => {
     if (activeFilter === "PENDING" && activity.completed) return false;
     if (activeFilter === "COMPLETED" && !activity.completed) return false;
@@ -126,6 +136,25 @@ export default async function ActivitiesPage({
       (activity.completed ||
         activity.dueDate === null ||
         activity.dueDate >= today)
+    ) {
+      return false;
+    }
+
+    if (
+      activeFilter === "TODAY" &&
+      (activity.completed ||
+        activity.dueDate === null ||
+        activity.dueDate < today ||
+        activity.dueDate >= tomorrow)
+    ) {
+      return false;
+    }
+
+    if (
+      activeFilter === "UPCOMING" &&
+      (activity.completed ||
+        activity.dueDate === null ||
+        activity.dueDate < tomorrow)
     ) {
       return false;
     }
