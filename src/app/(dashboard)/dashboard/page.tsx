@@ -16,6 +16,44 @@ export default async function DashboardPage() {
 
   const userId = session.user.id;
 
+  const now = new Date();
+
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+  const [overdueActivities, dueTodayActivities, upcomingActivities] =
+    await Promise.all([
+      prisma.activity.count({
+        where: {
+          contact: { userId },
+          completed: false,
+          dueDate: { lt: startOfToday },
+        },
+      }),
+
+      prisma.activity.count({
+        where: {
+          contact: { userId },
+          completed: false,
+          dueDate: {
+            gte: startOfToday,
+            lt: startOfTomorrow,
+          },
+        },
+      }),
+
+      prisma.activity.count({
+        where: {
+          contact: { userId },
+          completed: false,
+          dueDate: { gte: startOfTomorrow },
+        },
+      }),
+    ]);
+
   const recentActivities = await prisma.activity.findMany({
     where: {
       contact: {
@@ -134,6 +172,26 @@ export default async function DashboardPage() {
             description="Successful conversions"
           />
         </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <StatCard
+            title="Overdue"
+            value={String(overdueActivities)}
+            description="Past-due activities"
+          />
+
+          <StatCard
+            title="Due Today"
+            value={String(dueTodayActivities)}
+            description="Activities due today"
+          />
+
+          <StatCard
+            title="Upcoming"
+            value={String(upcomingActivities)}
+            description="Future activities"
+          />
+        </div>
+
         <div className="grid gap-6 lg:grid-cols-2">
           <RecentContacts contacts={recentContacts} />
           <PipelineOverview counts={pipelineCounts} />
