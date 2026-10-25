@@ -16,6 +16,27 @@ export default async function DashboardPage() {
 
   const userId = session.user.id;
 
+  const recentActivities = await prisma.activity.findMany({
+    where: {
+      contact: {
+        userId,
+      },
+    },
+    include: {
+      contact: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+  });
+
   const [totalContacts, newLeads, interested, converted, recentContacts] =
     await Promise.all([
       prisma.contact.count({
@@ -117,6 +138,56 @@ export default async function DashboardPage() {
           <RecentContacts contacts={recentContacts} />
           <PipelineOverview counts={pipelineCounts} />
         </div>
+
+        <section className="overflow-hidden rounded-xl border bg-card">
+          <div className="border-b p-5">
+            <h2 className="font-semibold">Recent Activities</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Your latest customer-related activities.
+            </p>
+          </div>
+
+          {recentActivities.length === 0 ? (
+            <p className="p-5 text-sm text-muted-foreground">
+              No activities yet. Create an activity to see it here.
+            </p>
+          ) : (
+            <div className="divide-y">
+              {recentActivities.map((activity) => (
+                <div
+                  key={activity.id}
+                  className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{activity.title}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {activity.contact.firstName} {activity.contact.lastName}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                        activity.completed
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                          : "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                      }`}
+                    >
+                      {activity.completed ? "Completed" : "Pending"}
+                    </span>
+
+                    <span className="whitespace-nowrap text-xs text-muted-foreground">
+                      {new Intl.DateTimeFormat("en", {
+                        month: "short",
+                        day: "numeric",
+                      }).format(activity.createdAt)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </PageTransition>
   );
