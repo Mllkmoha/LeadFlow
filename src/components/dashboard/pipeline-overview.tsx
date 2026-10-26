@@ -12,10 +12,30 @@ type PipelineOverviewProps = {
 };
 
 const stages = [
-  { key: "NEW", label: "New" },
-  { key: "CONTACTED", label: "Contacted" },
-  { key: "INTERESTED", label: "Interested" },
-  { key: "CONVERTED", label: "Converted" },
+  {
+    key: "NEW",
+    label: "New",
+    color: "bg-blue-500",
+    textColor: "text-blue-600 dark:text-blue-400",
+  },
+  {
+    key: "CONTACTED",
+    label: "Contacted",
+    color: "bg-violet-500",
+    textColor: "text-violet-600 dark:text-violet-400",
+  },
+  {
+    key: "INTERESTED",
+    label: "Interested",
+    color: "bg-amber-500",
+    textColor: "text-amber-600 dark:text-amber-400",
+  },
+  {
+    key: "CONVERTED",
+    label: "Converted",
+    color: "bg-emerald-500",
+    textColor: "text-emerald-600 dark:text-emerald-400",
+  },
 ] as const;
 
 export function PipelineOverview({ counts }: PipelineOverviewProps) {
@@ -34,22 +54,21 @@ export function PipelineOverview({ counts }: PipelineOverviewProps) {
             const width = (value / maxValue) * 100;
 
             return (
-              <div
-                key={stage.key}
-                className="flex items-center gap-4"
-              >
+              <div key={stage.key} className="flex items-center gap-4">
                 <div className="w-24 text-sm text-muted-foreground">
                   {stage.label}
                 </div>
 
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-primary"
+                    className={`h-full rounded-full transition-all duration-500 ${stage.color}`}
                     style={{ width: `${width}%` }}
                   />
                 </div>
 
-                <span className="w-8 text-right text-sm font-medium">
+                <span
+                  className={`w-8 text-right text-sm font-semibold tabular-nums ${stage.textColor}`}
+                >
                   {value}
                 </span>
               </div>
