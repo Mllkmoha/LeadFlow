@@ -1,3 +1,4 @@
+import { CheckCircle2, Clock } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { RecentContacts } from "@/components/dashboard/recent-contacts";
 import { PipelineOverview } from "@/components/dashboard/pipeline-overview";
@@ -228,12 +229,17 @@ export default async function DashboardPage() {
 
                   <div className="flex items-center gap-3">
                     <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
                         activity.completed
                           ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
                           : "bg-amber-500/10 text-amber-700 dark:text-amber-400"
                       }`}
                     >
+                      {activity.completed ? (
+                        <CheckCircle2 className="size-3.5" aria-hidden="true" />
+                      ) : (
+                        <Clock className="size-3.5" aria-hidden="true" />
+                      )}
                       {activity.completed ? "Completed" : "Pending"}
                     </span>
 
