@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { CheckCircle2, Clock } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { RecentContacts } from "@/components/dashboard/recent-contacts";
@@ -222,9 +224,12 @@ export default async function DashboardPage() {
                 >
                   <div className="min-w-0">
                     <p className="truncate font-medium">{activity.title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <Link
+                      href={`/contacts/${activity.contact.id}`}
+                      className="mt-1 block text-sm text-muted-foreground transition-colors hover:text-primary hover:underline"
+                    >
                       {activity.contact.firstName} {activity.contact.lastName}
-                    </p>
+                    </Link>
                   </div>
 
                   <div className="flex items-center gap-3">
