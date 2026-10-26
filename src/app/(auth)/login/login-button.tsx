@@ -8,7 +8,7 @@ export function LoginButton() {
     <button
       type="button"
       onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
-      className="group flex w-full items-center justify-center gap-3 rounded-xl bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-0"
+      className="group flex w-full items-center justify-center gap-3 rounded-xl border border-slate-900 bg-slate-950 px-5 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 active:translate-y-0"
     >
       <span aria-hidden="true" className="text-lg font-bold">
         <SiGithub

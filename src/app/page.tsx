@@ -53,14 +53,26 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="relative isolate overflow-hidden border-b">
+
+      <section className="relative isolate overflow-hidden border-b border-violet-100/70 bg-linear-to-b from-white via-violet-50/70 to-white dark:border-white/10 dark:from-background dark:via-violet-950/20 dark:to-background">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         >
-          <div className="absolute left-1/2 -top-45 h-115 w-190 -translate-x-1/2 rounded-full bg-primary/15 blur-[120px]" />
-          <div className="absolute left-[10%] top-95 h-64 w-64 rounded-full bg-violet-500/10 blur-[100px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--background)_78%)]" />
+          {/* Soft violet glow at the top */}
+          <div className="absolute left-1/2 -top-40 h-96 w-[min(100%,1100px)] -translate-x-1/2 rounded-full bg-violet-400/20 blur-[120px] dark:bg-violet-500/15" />
+
+          {/* Blue glow on the left */}
+          <div className="absolute -left-32 top-40 h-72 w-72 rounded-full bg-blue-400/15 blur-[100px] dark:bg-blue-500/10" />
+
+          {/* Violet glow on the right */}
+          <div className="absolute -right-32 top-20 h-80 w-80 rounded-full bg-fuchsia-400/15 blur-[110px] dark:bg-fuchsia-500/10" />
+
+          {/* Subtle grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(139,92,246,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(139,92,246,0.045)_1px,transparent_1px)] bg-size-[40px_40px] mask-[linear-gradient(to_bottom,black,transparent_85%)]" />
+
+          {/* Keep the center clean */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,var(--background)_100%)] opacity-60" />
         </div>
 
         <div className="mx-auto max-w-350 px-5 pb-20 pt-20 sm:px-8 sm:pt-28 lg:pb-28 lg:pt-32">
@@ -442,13 +454,13 @@ function FeatureCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5 }}
-      className="rounded-xl border bg-card p-6"
+      className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/80 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5"
     >
-      <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+      <div className="mb-5 flex size-12 items-center justify-center rounded-xl border border-primary/10 bg-linear-to-br from-primary/15 via-violet-500/10 to-blue-500/10 text-primary transition-transform duration-300 group-hover:scale-110">
         <Icon className="size-5" />
       </div>
 
-      <h3 className="font-semibold">{title}</h3>
+      <h3 className="text-base font-semibold tracking-tight">{title}</h3>
 
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         {description}
