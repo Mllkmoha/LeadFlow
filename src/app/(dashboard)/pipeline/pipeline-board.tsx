@@ -43,22 +43,37 @@ type ApiError = {
 const columns: {
   id: ContactStatus;
   title: string;
+  description: string;
+  accent: string;
+  badge: string;
 }[] = [
   {
     id: "NEW",
     title: "New",
+    description: "Recently added contacts",
+    accent: "border-t-sky-500",
+    badge: "bg-sky-500/10 text-sky-700 dark:text-sky-400",
   },
   {
     id: "CONTACTED",
     title: "Contacted",
+    description: "Initial contact made",
+    accent: "border-t-amber-500",
+    badge: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
   },
   {
     id: "INTERESTED",
     title: "Interested",
+    description: "Potential opportunities",
+    accent: "border-t-violet-500",
+    badge: "bg-violet-500/10 text-violet-700 dark:text-violet-400",
   },
   {
     id: "CONVERTED",
     title: "Converted",
+    description: "Successfully converted",
+    accent: "border-t-emerald-500",
+    badge: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
   },
 ];
 
@@ -188,6 +203,9 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
             key={column.id}
             id={column.id}
             title={column.title}
+            description={column.description}
+            accent={column.accent}
+            badge={column.badge}
             contacts={items.filter((contact) => contact.status === column.id)}
           />
         ))}
@@ -231,27 +249,41 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
 type PipelineColumnProps = {
   id: ContactStatus;
   title: string;
+  description: string;
+  accent: string;
+  badge: string;
   contacts: Contact[];
 };
 
-function PipelineColumn({ id, title, contacts }: PipelineColumnProps) {
-  const { setNodeRef, isOver } = useDroppable({
-    id,
-  });
+function PipelineColumn({
+  id,
+  title,
+  description,
+  accent,
+  badge,
+  contacts,
+}: PipelineColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
     <div
       ref={setNodeRef}
-      className={`min-h-100 rounded-xl border bg-card p-4 transition-colors ${
-        isOver ? "border-primary bg-muted/50" : ""
+      className={`min-h-100 rounded-xl border border-t-4 bg-card p-4 transition-colors ${accent} ${
+        isOver ? "bg-muted/60 ring-2 ring-primary/20" : ""
       }`}
     >
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-semibold">{title}</h2>
+      <div className="mb-4 border-b pb-4">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-semibold tracking-tight">{title}</h2>
 
-        <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium">
-          {contacts.length}
-        </span>
+          <span
+            className={`inline-flex min-w-7 items-center justify-center rounded-full px-2 py-1 text-xs font-semibold ${badge}`}
+          >
+            {contacts.length}
+          </span>
+        </div>
+
+        <p className="mt-1 text-xs text-muted-foreground">{description}</p>
       </div>
 
       <div className="space-y-3">
@@ -260,8 +292,21 @@ function PipelineColumn({ id, title, contacts }: PipelineColumnProps) {
         ))}
 
         {contacts.length === 0 && (
-          <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            Drop contacts here
+          <div
+            className={`rounded-lg border border-dashed p-5 text-center transition-colors ${
+              isOver
+                ? "border-primary bg-primary/5"
+                : "border-border/70 bg-muted/20"
+            }`}
+          >
+            <p className="text-sm font-medium text-muted-foreground">
+              {isOver ? "Drop contact here" : "No contacts yet"}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {isOver
+                ? "Release to move this contact"
+                : "Contacts in this stage will appear here."}
+            </p>
           </div>
         )}
       </div>
@@ -275,9 +320,7 @@ type PipelineCardProps = {
 
 function PipelineCard({ contact }: PipelineCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: contact.id,
-    });
+    useDraggable({ id: contact.id });
 
   const style = transform
     ? {
@@ -285,35 +328,50 @@ function PipelineCard({ contact }: PipelineCardProps) {
       }
     : undefined;
 
+  const initials =
+    `${contact.firstName.charAt(0)}${contact.lastName.charAt(0)}`.toUpperCase();
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      className={`cursor-grab rounded-lg border bg-background p-4 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing ${
-        isDragging ? "opacity-50" : ""
+      className={`group rounded-xl border bg-background p-3.5 shadow-sm transition-all hover:border-primary/30 hover:shadow-md ${
+        isDragging
+          ? "z-10 cursor-grabbing opacity-40"
+          : "cursor-grab active:cursor-grabbing"
       }`}
     >
       <Link
         href={`/contacts/${contact.id}`}
-        className="block"
+        className="block rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
         onClick={(event) => {
-          if (isDragging) {
-            event.preventDefault();
-          }
+          if (isDragging) event.preventDefault();
         }}
       >
-        <p className="font-medium">
-          {contact.firstName} {contact.lastName}
-        </p>
+        <div className="flex items-start gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+            {initials}
+          </div>
 
-        <p className="mt-1 text-sm text-muted-foreground">{contact.email}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold tracking-tight group-hover:text-primary">
+              {contact.firstName} {contact.lastName}
+            </p>
+
+            <p className="mt-1 truncate text-xs text-muted-foreground">
+              {contact.email}
+            </p>
+          </div>
+        </div>
 
         {contact.company && (
-          <p className="mt-2 text-xs text-muted-foreground">
-            {contact.company}
-          </p>
+          <div className="mt-3 border-t pt-2.5">
+            <p className="truncate text-xs text-muted-foreground">
+              {contact.company}
+            </p>
+          </div>
         )}
       </Link>
     </div>
