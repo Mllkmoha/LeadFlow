@@ -73,12 +73,28 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       return NextResponse.json({ error: "Contact not found" }, { status: 404 });
     }
 
-    const contact = await prisma.contact.update({
+    const updateResult = await prisma.contact.updateMany({
       where: {
         id,
+        userId: session.user.id,
       },
       data: result.data,
     });
+
+    if (updateResult.count === 0) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    }
+
+    const contact = await prisma.contact.findFirst({
+      where: {
+        id,
+        userId: session.user.id,
+      },
+    });
+
+    if (!contact) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    }
 
     return NextResponse.json(contact);
   } catch (error) {
