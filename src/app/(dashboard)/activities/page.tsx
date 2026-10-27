@@ -34,7 +34,6 @@ const activityLabels = {
   TASK: "Task",
 };
 
-
 type ActivityFilter =
   | "ALL"
   | "PENDING"
@@ -122,7 +121,7 @@ export default async function ActivitiesPage({
   const pendingCount = activities.length - completedCount;
 
   const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
