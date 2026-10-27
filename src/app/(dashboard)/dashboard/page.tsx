@@ -89,7 +89,7 @@ export default async function DashboardPage() {
           userId,
           status: ContactStatus.NEW,
           createdAt: {
-            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+            gte: new Date(now.getFullYear(), now.getMonth(), 1),
           },
         },
       }),
