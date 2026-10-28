@@ -189,6 +189,8 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
     });
   }
 
+  const totalContacts = items.length;
+
   return (
     <DndContext
       id="pipeline-dnd-context"
@@ -207,6 +209,7 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
             accent={column.accent}
             badge={column.badge}
             contacts={items.filter((contact) => contact.status === column.id)}
+            totalContacts={totalContacts}
           />
         ))}
       </div>
@@ -253,6 +256,7 @@ type PipelineColumnProps = {
   accent: string;
   badge: string;
   contacts: Contact[];
+  totalContacts: number;
 };
 
 function PipelineColumn({
@@ -262,8 +266,14 @@ function PipelineColumn({
   accent,
   badge,
   contacts,
+  totalContacts,
 }: PipelineColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
+
+  const percentage =
+    contacts.length === 0
+      ? 0
+      : Math.round((contacts.length / totalContacts) * 100);
 
   return (
     <div
@@ -284,6 +294,19 @@ function PipelineColumn({
         </div>
 
         <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+
+        <div className="mt-3">
+          <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+            <span>Pipeline share</span>
+            <span>{percentage}%</span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-300"
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="space-y-3">
