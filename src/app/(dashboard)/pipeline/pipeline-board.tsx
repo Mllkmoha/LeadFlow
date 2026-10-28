@@ -379,9 +379,15 @@ function PipelineCard({ contact }: PipelineCardProps) {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold tracking-tight group-hover:text-primary">
-              {contact.firstName} {contact.lastName}
-            </p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="truncate text-sm font-semibold tracking-tight group-hover:text-primary">
+                {contact.firstName} {contact.lastName}
+              </p>
+
+              <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                {contact.status}
+              </span>
+            </div>
 
             <p className="mt-1 truncate text-xs text-muted-foreground">
               {contact.email}
