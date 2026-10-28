@@ -120,6 +120,13 @@ export default async function ActivitiesPage({
 
   const pendingCount = activities.length - completedCount;
 
+  const overdueCount = activities.filter(
+    (activity) =>
+      !activity.completed &&
+      activity.dueDate !== null &&
+      activity.dueDate < new Date(new Date().setHours(0, 0, 0, 0)),
+  ).length;
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -214,7 +221,7 @@ export default async function ActivitiesPage({
           </Link>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Total activities</p>
             <p className="mt-2 text-2xl font-semibold">{activities.length}</p>
@@ -228,6 +235,17 @@ export default async function ActivitiesPage({
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Completed</p>
             <p className="mt-2 text-2xl font-semibold">{completedCount}</p>
+          </div>
+
+          <div className="rounded-xl border bg-card p-5">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Overdue</p>
+              <Clock3 className="size-4 text-red-500" />
+            </div>
+            <p className="mt-2 text-2xl font-semibold">{overdueCount}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Pending activities past their due date
+            </p>
           </div>
         </div>
 
@@ -324,18 +342,31 @@ export default async function ActivitiesPage({
 
                     <div className="flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
                       {activity.dueDate && (
-                        <span className="flex items-center gap-1.5">
-                          {activity.dueDate < today && !activity.completed ? (
+                        <span
+                          className={`flex items-center gap-1.5 ${
+                            !activity.completed && activity.dueDate < today
+                              ? "font-medium text-red-600 dark:text-red-400"
+                              : activity.dueDate >= today &&
+                                  activity.dueDate < tomorrow
+                                ? "font-medium text-blue-600 dark:text-blue-400"
+                                : ""
+                          }`}
+                        >
+                          {!activity.completed && activity.dueDate < today ? (
                             <Clock3 className="size-4" />
                           ) : (
                             <CalendarDays className="size-4" />
                           )}
 
-                          {activity.dueDate.toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
+                          {!activity.completed &&
+                          activity.dueDate >= today &&
+                          activity.dueDate < tomorrow
+                            ? "Today"
+                            : activity.dueDate.toLocaleDateString("en-GB", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })}
                         </span>
                       )}
 
