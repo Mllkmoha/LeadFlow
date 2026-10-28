@@ -385,7 +385,7 @@ function PipelineCard({ contact }: PipelineCardProps) {
               </p>
 
               <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                {contact.status}
+               {columns.find((column) => column.id === contact.status)?.title} 
               </span>
             </div>
 
