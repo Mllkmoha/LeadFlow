@@ -27,108 +27,83 @@ export default async function DashboardPage() {
   const startOfTomorrow = new Date(startOfToday);
   startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
 
-  const [overdueActivities, dueTodayActivities, upcomingActivities] =
-    await Promise.all([
-      prisma.activity.count({
-        where: {
-          contact: { userId },
-          completed: false,
-          dueDate: { lt: startOfToday },
-        },
-      }),
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-      prisma.activity.count({
-        where: {
-          contact: { userId },
-          completed: false,
-          dueDate: {
-            gte: startOfToday,
-            lt: startOfTomorrow,
-          },
+  const [
+    overdueActivities,
+    dueTodayActivities,
+    upcomingActivities,
+    recentActivities,
+    totalContacts,
+    newLeads,
+    interested,
+    converted,
+    recentContacts,
+    pipeline,
+  ] = await Promise.all([
+    prisma.activity.count({
+      where: {
+        contact: { userId },
+        completed: false,
+        dueDate: { lt: startOfToday },
+      },
+    }),
+    prisma.activity.count({
+      where: {
+        contact: { userId },
+        completed: false,
+        dueDate: { gte: startOfToday, lt: startOfTomorrow },
+      },
+    }),
+    prisma.activity.count({
+      where: {
+        contact: { userId },
+        completed: false,
+        dueDate: { gte: startOfTomorrow },
+      },
+    }),
+    prisma.activity.findMany({
+      where: { contact: { userId } },
+      include: {
+        contact: {
+          select: { id: true, firstName: true, lastName: true },
         },
-      }),
-
-      prisma.activity.count({
-        where: {
-          contact: { userId },
-          completed: false,
-          dueDate: { gte: startOfTomorrow },
-        },
-      }),
-    ]);
-
-  const recentActivities = await prisma.activity.findMany({
-    where: {
-      contact: {
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+    prisma.contact.count({ where: { userId } }),
+    prisma.contact.count({
+      where: {
         userId,
+        status: ContactStatus.NEW,
+        createdAt: { gte: startOfMonth },
       },
-    },
-    include: {
-      contact: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-        },
+    }),
+    prisma.contact.count({
+      where: { userId, status: ContactStatus.INTERESTED },
+    }),
+    prisma.contact.count({
+      where: { userId, status: ContactStatus.CONVERTED },
+    }),
+    prisma.contact.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        company: true,
+        status: true,
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 5,
-  });
-
-  const [totalContacts, newLeads, interested, converted, recentContacts] =
-    await Promise.all([
-      prisma.contact.count({
-        where: { userId },
-      }),
-
-      prisma.contact.count({
-        where: {
-          userId,
-          status: ContactStatus.NEW,
-          createdAt: {
-            gte: new Date(now.getFullYear(), now.getMonth(), 1),
-          },
-        },
-      }),
-
-      prisma.contact.count({
-        where: {
-          userId,
-          status: ContactStatus.INTERESTED,
-        },
-      }),
-
-      prisma.contact.count({
-        where: {
-          userId,
-          status: ContactStatus.CONVERTED,
-        },
-      }),
-
-      prisma.contact.findMany({
-        where: { userId },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          company: true,
-          status: true,
-        },
-      }),
-    ]);
-
-  const pipeline = await prisma.contact.groupBy({
-    by: ["status"],
-    where: { userId },
-    _count: {
-      _all: true,
-    },
-  });
+    }),
+    prisma.contact.groupBy({
+      by: ["status"],
+      where: { userId },
+      _count: { _all: true },
+    }),
+  ]);
 
   const pipelineCounts = {
     NEW: 0,
@@ -140,6 +115,7 @@ export default async function DashboardPage() {
   for (const stage of pipeline) {
     pipelineCounts[stage.status] = stage._count._all;
   }
+
   return (
     <PageTransition>
       <div className="space-y-6">
