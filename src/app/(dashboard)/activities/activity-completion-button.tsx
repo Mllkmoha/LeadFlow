@@ -14,10 +14,14 @@ export function ActivityCompletionButton({
   completed,
 }: ActivityCompletionButtonProps) {
   const router = useRouter();
+  const [isCompleted, setIsCompleted] = useState(completed);
+
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState("");
 
   async function toggleCompletion() {
+    const nextCompleted = !isCompleted;
+
     setIsUpdating(true);
     setError("");
 
@@ -27,7 +31,7 @@ export function ActivityCompletionButton({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ completed: !completed }),
+        body: JSON.stringify({ completed: nextCompleted }),
       });
 
       const data: { error?: string } = await response.json();
@@ -35,6 +39,8 @@ export function ActivityCompletionButton({
       if (!response.ok) {
         throw new Error(data.error ?? "Failed to update activity.");
       }
+
+      setIsCompleted(nextCompleted);
 
       router.refresh();
     } catch (error) {
@@ -53,16 +59,16 @@ export function ActivityCompletionButton({
         onClick={toggleCompletion}
         disabled={isUpdating}
         aria-label={
-          completed ? "Reopen activity" : "Mark activity as completed"
+          isCompleted ? "Reopen activity" : "Mark activity as completed"
         }
         className="inline-flex h-9 items-center justify-center rounded-lg border border-emerald-600/30 bg-emerald-600/10 px-3 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-600/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400"
       >
-        {completed ? (
+        {isCompleted ? (
           <CheckCircle2 className="size-4" />
         ) : (
           <Circle className="size-4" />
         )}
-        {isUpdating ? "Updating..." : completed ? "Reopen" : "Mark completed"}
+        {isUpdating ? "Updating..." : isCompleted ? "Reopen" : "Mark completed"}
       </button>
 
       {error && <p className="text-xs text-destructive">{error}</p>}
