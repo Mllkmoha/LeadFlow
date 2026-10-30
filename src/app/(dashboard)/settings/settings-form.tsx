@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, UserRound } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Laptop, Moon, Palette, Save, Sun, UserRound } from "lucide-react";
 
 type AccountSettings = {
   name: string | null;
@@ -16,6 +17,7 @@ export function SettingsForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     async function loadSettings() {
@@ -163,6 +165,47 @@ export function SettingsForm() {
             <Save className="size-4" />
             {saving ? "Saving..." : "Save changes"}
           </button>
+        </div>
+      </section>
+
+      {/* Appearance */}
+      <section className="rounded-xl border bg-card p-6">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="rounded-lg bg-primary/10 p-2 text-primary">
+            <Palette className="size-5" />
+          </div>
+          <div>
+            <h2 className="font-semibold">Appearance</h2>
+            <p className="text-sm text-muted-foreground">
+              Customize how LeadFlow looks.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            { value: "light", label: "Light", icon: Sun },
+            { value: "dark", label: "Dark", icon: Moon },
+            { value: "system", label: "System", icon: Laptop },
+          ].map((option) => {
+            const Icon = option.icon;
+            const selected = theme === option.value;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setTheme(option.value)}
+                aria-pressed={selected}
+                className={`flex items-center gap-3 rounded-lg border p-4 text-sm transition-colors ${
+                  selected ? "border-primary bg-primary/5" : "hover:bg-muted"
+                }`}
+              >
+                <Icon className="size-5" />
+                <span className="font-medium">{option.label}</span>
+              </button>
+            );
+          })}
         </div>
       </section>
     </form>
