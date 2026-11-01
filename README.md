@@ -18,7 +18,7 @@
 
 <br />
 
-**LeadFlow** is a production-grade CRM designed to eliminate the chaos of lead management. Built with a focus on speed, type-safety, and an elite user experience, it transforms the way you track customer journeys from discovery to conversion.
+**LeadFlow** is a production-grade CRM designed to eliminate the chaos of lead management. Built with a focus on speed, type-safety, and an elite user experience, it transforms the way you track customer journeys from discovery to conversion 10/10.
 
 </div>
 
