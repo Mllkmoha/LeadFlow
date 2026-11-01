@@ -53,6 +53,8 @@ model Contact {
   @@index([userId])
   @@index([status])
   @@index([email])
+  @@index([userId, createdAt])
+  @@index([userId, status])
 }
 
 model Note {
@@ -82,4 +84,6 @@ model Activity {
 
   @@index([contactId])
   @@index([dueDate])
+  @@index([contactId, completed, dueDate])
+  @@index([contactId, createdAt])
 }
