@@ -21,7 +21,14 @@ export function Providers({ children }: ProvidersProps) {
   );
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      scriptProps={
+        typeof window !== "undefined" ? { type: "application/json" } : undefined
+      }
+    >
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThemeProvider>
   );

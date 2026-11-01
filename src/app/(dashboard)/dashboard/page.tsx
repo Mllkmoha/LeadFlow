@@ -10,6 +10,10 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { ContactStatus } from "@/../generated/prisma/client";
 
+function getTime() {
+  return performance.now();
+}
+
 export default async function DashboardPage() {
   const session = await auth();
 
@@ -29,6 +33,8 @@ export default async function DashboardPage() {
 
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
+  const queryStart = getTime();
+
   const [
     overdueActivities,
     dueTodayActivities,
@@ -41,13 +47,23 @@ export default async function DashboardPage() {
     recentContacts,
     pipeline,
   ] = await Promise.all([
-    prisma.activity.count({
-      where: {
-        contact: { userId },
-        completed: false,
-        dueDate: { lt: startOfToday },
-      },
-    }),
+    (async () => {
+      const start = getTime();
+
+      const result = await prisma.activity.count({
+        where: {
+          contact: { userId },
+          completed: false,
+          dueDate: { lt: startOfToday },
+        },
+      });
+
+      console.log(
+        `[Dashboard] Overdue query: ${(getTime() - start).toFixed(2)}ms`,
+      );
+
+      return result;
+    })(),
     prisma.activity.count({
       where: {
         contact: { userId },
@@ -104,6 +120,10 @@ export default async function DashboardPage() {
       _count: { _all: true },
     }),
   ]);
+
+  console.log(
+    `[Dashboard] Database queries: ${(getTime() - queryStart).toFixed(2)}ms`,
+  );
 
   const pipelineCounts = {
     NEW: 0,

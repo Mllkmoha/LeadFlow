@@ -93,112 +93,120 @@ export default async function ActivitiesPage({
     return null;
   }
 
-  const activities = await prisma.activity.findMany({
-    where: {
-      contact: {
-        userId: session.user.id,
-      },
-    },
-    include: {
-      contact: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          company: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  const completedCount = activities.filter(
-    (activity) => activity.completed,
-  ).length;
-
-  const pendingCount = activities.length - completedCount;
-
-  const overdueCount = activities.filter(
-    (activity) =>
-      !activity.completed &&
-      activity.dueDate !== null &&
-      activity.dueDate < new Date(new Date().setHours(0, 0, 0, 0)),
-  ).length;
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const filteredActivities = activities.filter((activity) => {
-    if (activeFilter === "PENDING" && activity.completed) return false;
-    if (activeFilter === "COMPLETED" && !activity.completed) return false;
+  const userWhere = {
+    contact: {
+      userId: session.user.id,
+    },
+  };
 
-    if (
-      activeFilter === "OVERDUE" &&
-      (activity.completed ||
-        activity.dueDate === null ||
-        activity.dueDate >= today)
-    ) {
-      return false;
-    }
+  const filterWhere = {
+    ...(activeFilter === "PENDING" ? { completed: false } : {}),
+    ...(activeFilter === "COMPLETED" ? { completed: true } : {}),
+    ...(activeFilter === "OVERDUE"
+      ? { completed: false, dueDate: { lt: today } }
+      : {}),
+    ...(activeFilter === "TODAY"
+      ? { completed: false, dueDate: { gte: today, lt: tomorrow } }
+      : {}),
+    ...(activeFilter === "UPCOMING"
+      ? { completed: false, dueDate: { gte: tomorrow } }
+      : {}),
+  };
 
-    if (
-      activeFilter === "TODAY" &&
-      (activity.completed ||
-        activity.dueDate === null ||
-        activity.dueDate < today ||
-        activity.dueDate >= tomorrow)
-    ) {
-      return false;
-    }
+  const searchWhere = search
+    ? {
+        OR: [
+          { title: { contains: search, mode: "insensitive" as const } },
+          { content: { contains: search, mode: "insensitive" as const } },
+          {
+            contact: {
+              is: {
+                firstName: {
+                  contains: search,
+                  mode: "insensitive" as const,
+                },
+              },
+            },
+          },
+          {
+            contact: {
+              is: {
+                lastName: {
+                  contains: search,
+                  mode: "insensitive" as const,
+                },
+              },
+            },
+          },
+          {
+            contact: {
+              is: {
+                company: {
+                  contains: search,
+                  mode: "insensitive" as const,
+                },
+              },
+            },
+          },
+        ],
+      }
+    : {};
 
-    if (
-      activeFilter === "UPCOMING" &&
-      (activity.completed ||
-        activity.dueDate === null ||
-        activity.dueDate < tomorrow)
-    ) {
-      return false;
-    }
+  const orderBy = {
+    NEWEST: { createdAt: "desc" as const },
+    OLDEST: { createdAt: "asc" as const },
+    DUE_DATE: {
+      dueDate: { sort: "asc" as const, nulls: "last" as const },
+    },
+    TITLE: { title: "asc" as const },
+  }[activeSort];
 
-    if (!search) return true;
-
-    const searchableText = [
-      activity.title,
-      activity.content ?? "",
-      activity.contact.firstName,
-      activity.contact.lastName,
-      activity.contact.company ?? "",
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    return searchableText.includes(search);
-  });
-
-  const sortedActivities = [...filteredActivities].sort((a, b) => {
-    switch (activeSort) {
-      case "OLDEST":
-        return a.createdAt.getTime() - b.createdAt.getTime();
-
-      case "DUE_DATE":
-        if (a.dueDate === null && b.dueDate === null) return 0;
-        if (a.dueDate === null) return 1;
-        if (b.dueDate === null) return -1;
-        return a.dueDate.getTime() - b.dueDate.getTime();
-
-      case "TITLE":
-        return a.title.localeCompare(b.title);
-
-      case "NEWEST":
-      default:
-        return b.createdAt.getTime() - a.createdAt.getTime();
-    }
-  });
+  const [
+    totalCount,
+    pendingCount,
+    completedCount,
+    overdueCount,
+    sortedActivities,
+  ] = await Promise.all([
+    prisma.activity.count({ where: userWhere }),
+    prisma.activity.count({
+      where: { ...userWhere, completed: false },
+    }),
+    prisma.activity.count({
+      where: { ...userWhere, completed: true },
+    }),
+    prisma.activity.count({
+      where: {
+        ...userWhere,
+        completed: false,
+        dueDate: { lt: today },
+      },
+    }),
+    prisma.activity.findMany({
+      where: {
+        ...userWhere,
+        ...filterWhere,
+        ...searchWhere,
+      },
+      include: {
+        contact: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            company: true,
+          },
+        },
+      },
+      orderBy,
+    }),
+  ]);
 
   return (
     <PageTransition>
@@ -224,7 +232,7 @@ export default async function ActivitiesPage({
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl border bg-card p-5">
             <p className="text-sm text-muted-foreground">Total activities</p>
-            <p className="mt-2 text-2xl font-semibold">{activities.length}</p>
+            <p className="mt-2 text-2xl font-semibold">{totalCount}</p>
           </div>
 
           <div className="rounded-xl border bg-card p-5">
@@ -275,7 +283,7 @@ export default async function ActivitiesPage({
               </div>
 
               <h3 className="font-semibold">
-                {activities.length === 0
+                {totalCount === 0
                   ? "No activities yet"
                   : search
                     ? "No activities match your search"
@@ -283,7 +291,7 @@ export default async function ActivitiesPage({
               </h3>
 
               <p className="text-sm text-muted-foreground">
-                {activities.length === 0
+                {totalCount === 0
                   ? "Activities associated with your contacts will appear here."
                   : search
                     ? "Try a different search term or adjust your status filter."

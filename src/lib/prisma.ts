@@ -16,6 +16,7 @@ databaseUrl.searchParams.delete("sslrootcert");
 databaseUrl.searchParams.delete("sslcert");
 databaseUrl.searchParams.delete("sslkey");
 
+
 const ca = readFileSync(
   resolve(process.cwd(), "certs/supabase-prod-ca.crt"),
   "utf8",

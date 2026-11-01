@@ -14,8 +14,9 @@ const benefits = [
 
 export default function LoginPage() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f8f9ff] px-4 py-3 text-slate-950 lg:h-screen lg:min-h-0 lg:p-4">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-3 text-foreground lg:h-screen lg:min-h-0 lg:p-4">
       {/* Background decoration */}
+
       <div className="pointer-events-none absolute -left-40 -top-40 size-112 rounded-full bg-violet-300/30 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 size-120 rounded-full bg-blue-300/30 blur-[130px]" />
 
@@ -23,7 +24,7 @@ export default function LoginPage() {
         initial={{ opacity: 0, y: 18, scale: 0.99 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.55, ease: "easeOut" }}
-        className="relative grid w-full max-w-5xl overflow-hidden rounded-3xl border border-white/80 bg-white shadow-[0_24px_70px_-35px_rgba(67,56,202,0.25)] lg:max-h-full lg:grid-cols-[1.05fr_0.95fr]"
+        className="relative grid w-full max-w-5xl overflow-hidden rounded-3xl border border-border bg-card shadow-[0_24px_70px_-35px_rgba(67,56,202,0.25)] lg:max-h-full lg:grid-cols-[1.05fr_0.95fr]"
       >
         {/* Left: brand and product introduction */}
         <section className="relative flex flex-col justify-between overflow-hidden bg-linear-to-br from-[#17152f] via-[#28205a] to-[#303b85] p-5 text-white sm:p-7 lg:p-8">
@@ -108,7 +109,7 @@ export default function LoginPage() {
         </section>
 
         {/* Right: sign in */}
-        <section className="relative flex items-center justify-center bg-white px-6 py-5 sm:px-8 lg:px-9 lg:py-3">
+        <section className="relative flex items-center justify-center bg-card px-6 py-5 sm:px-8 lg:px-9 lg:py-3">
           <div className="pointer-events-none absolute right-0 top-0 size-64 bg-linear-to-bl from-violet-50 to-transparent" />
 
           <div className="relative w-full max-w-sm">
@@ -149,11 +150,11 @@ export default function LoginPage() {
                 Welcome to LeadFlow
               </p>
 
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
                 Welcome back.
               </h2>
 
-              <p className="mt-2 text-sm leading-5 text-slate-500">
+              <p className="mt-2 text-sm leading-5 text-muted-foreground">
                 Sign in to pick up where you left off. Your workspace is waiting
                 for you.
               </p>
