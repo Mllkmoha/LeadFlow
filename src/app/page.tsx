@@ -31,7 +31,7 @@ export default function Home() {
           >
             <Image
               src="/leadFlow-icon-color.png"
-              alt="LeadFlow"
+              alt=""
               width={40}
               height={40}
               className="object-contain"
@@ -322,19 +322,19 @@ export default function Home() {
                             initials: "JD",
                             name: "Jordan Davis",
                             action: "Contact added",
-                            color: "bg-blue-500/10 text-blue-600",
+                            color: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
                           },
                           {
                             initials: "AM",
                             name: "Alex Morgan",
                             action: "Follow-up completed",
-                            color: "bg-violet-500/10 text-violet-600",
+                            color: "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300",
                           },
                           {
                             initials: "SK",
                             name: "Sam Kim",
                             action: "Status updated",
-                            color: "bg-emerald-500/10 text-emerald-600",
+                            color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
                           },
                         ].map((activity) => (
                           <div
