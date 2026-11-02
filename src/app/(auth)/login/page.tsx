@@ -14,7 +14,7 @@ const benefits = [
 
 export default function LoginPage() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-3 text-foreground lg:h-screen lg:min-h-0 lg:p-4">
+    <main className="relative flex min-h-screen items-start justify-center overflow-hidden bg-background px-3 py-4 text-foreground sm:px-4 sm:py-6 lg:h-screen lg:min-h-0 lg:items-center lg:p-4">
       {/* Background decoration */}
 
       <div className="pointer-events-none absolute -left-40 -top-40 size-112 rounded-full bg-violet-300/30 blur-[120px]" />
@@ -24,10 +24,10 @@ export default function LoginPage() {
         initial={{ opacity: 0, y: 18, scale: 0.99 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.55, ease: "easeOut" }}
-        className="relative grid w-full max-w-5xl overflow-hidden rounded-3xl border border-border bg-card shadow-[0_24px_70px_-35px_rgba(67,56,202,0.25)] lg:max-h-full lg:grid-cols-[1.05fr_0.95fr]"
+        className="relative grid w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-card shadow-[0_24px_70px_-35px_rgba(67,56,202,0.25)] sm:rounded-3xl lg:max-h-full lg:grid-cols-[1.05fr_0.95fr]"
       >
         {/* Left: brand and product introduction */}
-        <section className="relative flex flex-col justify-between overflow-hidden bg-linear-to-br from-[#17152f] via-[#28205a] to-[#303b85] p-5 text-white sm:p-7 lg:p-8">
+        <section className="relative flex flex-col justify-between overflow-hidden bg-linear-to-br from-[#17152f] via-[#28205a] to-[#303b85] p-4 text-white sm:p-7 lg:p-8">
           <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-violet-500/25 blur-[90px]" />
           <div className="pointer-events-none absolute -bottom-28 -left-20 size-80 rounded-full bg-blue-400/20 blur-[90px]" />
 
@@ -109,28 +109,12 @@ export default function LoginPage() {
         </section>
 
         {/* Right: sign in */}
-        <section className="relative flex items-center justify-center bg-card px-6 py-5 sm:px-8 lg:px-9 lg:py-3">
+        <section className="relative flex items-center justify-center bg-card px-4 py-5 sm:px-8 lg:px-9 lg:py-3">
           <div className="pointer-events-none absolute right-0 top-0 size-64 bg-linear-to-bl from-violet-50 to-transparent" />
 
           <div className="relative w-full max-w-sm">
-            {/* Mobile brand */}
-            <div className="mb-4 lg:hidden">
-              <Link href="/" className="inline-flex items-center gap-2">
-                <Image
-                  src="/leadFlow-icon-color.png"
-                  alt="LeadFlow"
-                  width={34}
-                  height={34}
-                  className="object-contain"
-                />
-
-                <span className="text-lg font-semibold tracking-tight">
-                  LeadFlow
-                </span>
-              </Link>
-            </div>
-
             {/* Welcome */}
+
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -150,7 +134,7 @@ export default function LoginPage() {
                 Welcome to LeadFlow
               </p>
 
-              <h2 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Welcome back.
               </h2>
 
@@ -173,7 +157,7 @@ export default function LoginPage() {
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Use your GitHub account to securely sign in.
+                  Choose your preferred way to securely sign in.
                 </p>
               </div>
 
@@ -203,8 +187,8 @@ export default function LoginPage() {
                     </p>
 
                     <p className="mt-1 text-xs leading-5 text-slate-500">
-                      GitHub handles the sign-in authorization. LeadFlow never
-                      asks for your GitHub password.
+                      Google and GitHub handle sign-in securely. LeadFlow never
+                      asks for your account password.
                     </p>
                   </div>
                 </div>
@@ -213,7 +197,8 @@ export default function LoginPage() {
 
             {/* Authorization note */}
             <p className="mt-4 text-center text-xs leading-5 text-slate-400">
-              By continuing, you agree to authorize LeadFlow through GitHub.
+              By continuing, you agree to authorize LeadFlow through your chosen
+              provider.
             </p>
 
             {/* Home link */}
