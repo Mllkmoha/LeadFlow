@@ -8,7 +8,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma skills sync || exit 0",
+    "postinstall": "prisma generate",
     "db:status": "tsx -e 'import \"dotenv/config\"; import { spawnSync } from \"node:child_process\"; const u = new URL(process.env.DATABASE_URL!); u.port = \"5432\"; u.searchParams.set(\"sslmode\", \"require\"); const r = spawnSync(\"npx\", [\"prisma\", \"migrate\", \"status\"], { stdio: \"inherit\", env: { ...process.env, DATABASE_URL: u.toString() } }); process.exit(r.status ?? 1);'"
   },
   "dependencies": {
