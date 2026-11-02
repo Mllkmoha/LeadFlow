@@ -24,10 +24,10 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       {/* Navigation */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link
             href="/"
-            className="flex items-center gap-2 text-xl font-semibold tracking-tight"
+            className="flex items-center gap-2 text-lg sm:text-xl font-semibold tracking-tight"
           >
             <Image
               src="/leadFlow-icon-color.png"
@@ -39,7 +39,7 @@ export default function Home() {
             LeadFlow
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login"
               className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -61,7 +61,7 @@ export default function Home() {
 
             <Link
               href="/login"
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              className="hidden rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
             >
               Get started
             </Link>
@@ -92,13 +92,13 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,var(--background)_100%)] opacity-60" />
         </div>
 
-        <div className="mx-auto max-w-350 px-5 pb-20 pt-20 sm:px-8 sm:pt-28 lg:pb-28 lg:pt-32">
+        <div className="mx-auto max-w-350 px-5 pb-16 pt-16 sm:px-8 sm:pb-20 sm:pt-28 lg:pb-28 lg:pt-32">
           <div className="mx-auto max-w-4xl text-center">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mx-auto mb-7 inline-flex items-center gap-2 rounded-full border bg-background/70 px-4 py-2 text-sm shadow-sm backdrop-blur"
+              className="mx-auto mb-7 inline-flex items-center gap-2 rounded-full border bg-background/70 px-3 py-2 text-xs shadow-sm backdrop-blur sm:px-4 sm:text-sm"
             >
               <Sparkles className="size-4 text-primary" />
               <span className="text-muted-foreground">
@@ -111,7 +111,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08 }}
-              className="text-5xl font-semibold leading-[1.05] tracking-[-0.055em] sm:text-6xl lg:text-8xl"
+              className="text-4xl font-semibold leading-[1.05] tracking-[-0.055em] sm:text-6xl lg:text-8xl"
             >
               Every lead has
               <br />
@@ -175,12 +175,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 36, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative mx-auto mt-16 max-w-6xl sm:mt-20"
+            className="relative mx-auto mt-12 max-w-6xl sm:mt-20"
           >
             <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-primary/10 blur-3xl" />
 
             <div className="overflow-hidden rounded-2xl border bg-card shadow-2xl shadow-black/10 ring-1 ring-black/5 dark:ring-white/10">
-              <div className="flex items-center justify-between border-b px-4 py-3 sm:px-6">
+              <div className="flex items-center justify-between border-b px-3 py-3 sm:px-6">
                 <div className="flex items-center gap-2">
                   <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
                     <Sparkles className="size-4 text-primary" />
@@ -190,12 +190,12 @@ export default function Home() {
                     WORKSPACE
                   </span>
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="hidden text-xs text-muted-foreground sm:inline">
                   Dashboard preview
                 </span>
               </div>
 
-              <div className="grid min-h-75 sm:grid-cols-[180px_1fr]">
+              <div className="grid min-h-75 grid-cols-1 sm:grid-cols-[180px_1fr]">
                 <aside className="hidden border-r bg-muted/20 p-4 sm:block">
                   <p className="mb-4 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     Workspace
@@ -216,7 +216,7 @@ export default function Home() {
                   )}
                 </aside>
 
-                <div className="min-w-0 p-4 sm:p-6 lg:p-8">
+                <div className="min-w-0 p-3 sm:p-6 lg:p-8">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="text-lg font-semibold tracking-tight">
@@ -256,7 +256,7 @@ export default function Home() {
                     ].map((stat) => (
                       <div
                         key={stat.label}
-                        className="rounded-xl border p-3 sm:p-4"
+                        className="min-w-0 rounded-xl border p-2.5 sm:p-4"
                       >
                         <div
                           className={`mb-3 size-2 rounded-full ${stat.color}`}
@@ -300,7 +300,7 @@ export default function Home() {
                             key={stage.label}
                             className="flex items-center gap-3"
                           >
-                            <span className="w-20 text-xs text-muted-foreground">
+                            <span className="w-16 shrink-0 text-xs text-muted-foreground sm:w-20">
                               {stage.label}
                             </span>
                             <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
@@ -373,7 +373,7 @@ export default function Home() {
 
       {/* Features */}
       <section className="border-t bg-muted/30">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -381,7 +381,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="mx-auto max-w-2xl text-center"
           >
-            <h2 className="text-3xl font-semibold tracking-tight">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
               Everything you need to manage leads
             </h2>
             <p className="mt-3 text-muted-foreground">
@@ -413,15 +413,15 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          className="rounded-2xl border bg-card px-6 py-16 text-center shadow-sm"
+          className="rounded-2xl border bg-card px-4 py-12 text-center shadow-sm sm:px-6 sm:py-16"
         >
-          <h2 className="text-3xl font-semibold tracking-tight">
+          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Ready to organize your leads?
           </h2>
 
@@ -446,7 +446,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 text-sm text-muted-foreground"
+          className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6"
         >
           <span>© 2026 LeadFlow</span>
           <span>Customer relationship management, simplified.</span>
@@ -471,7 +471,7 @@ function FeatureCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5 }}
-      className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/80 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5"
+      className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 sm:p-6"
     >
       <div className="mb-5 flex size-12 items-center justify-center rounded-xl border border-primary/10 bg-linear-to-br from-primary/15 via-violet-500/10 to-blue-500/10 text-primary transition-transform duration-300 group-hover:scale-110">
         <Icon className="size-5" />
