@@ -173,7 +173,7 @@ export default function LoginPage() {
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Use your GitHub account to securely sign in.
+                  Choose your preferred way to securely sign in.
                 </p>
               </div>
 
@@ -203,8 +203,8 @@ export default function LoginPage() {
                     </p>
 
                     <p className="mt-1 text-xs leading-5 text-slate-500">
-                      GitHub handles the sign-in authorization. LeadFlow never
-                      asks for your GitHub password.
+                      Google and GitHub handle sign-in securely. LeadFlow never
+                      asks for your account password.
                     </p>
                   </div>
                 </div>
@@ -213,7 +213,8 @@ export default function LoginPage() {
 
             {/* Authorization note */}
             <p className="mt-4 text-center text-xs leading-5 text-slate-400">
-              By continuing, you agree to authorize LeadFlow through GitHub.
+              By continuing, you agree to authorize LeadFlow through your chosen
+              provider.
             </p>
 
             {/* Home link */}
