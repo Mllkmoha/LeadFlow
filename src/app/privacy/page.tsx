@@ -205,10 +205,7 @@ export default function PrivacyPolicyPage() {
         </p>
         <p className="mt-3">
           For an account deletion request, use the subject line
-          <strong className="text-foreground">
-            {" "}
-            LeadFlow Account Deletion
-          </strong>
+          <strong className="text-foreground"> LeadFlow Account Deletion </strong> 
           and send the request from the email address associated with your
           account. We may ask for reasonable information to verify that you
           control the account before processing the request. Account deletion
