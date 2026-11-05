@@ -1,7 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
@@ -12,9 +12,17 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+const isVercel = process.env.VERCEL === "1";
+
 export const metadata: Metadata = {
   title: "LeadFlow",
   description: "Customer relationship management, simplified.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -27,8 +35,12 @@ export default function RootLayout({
       <body className="font-sans">
         <Providers>
           {children}
-          <Analytics />
-          <SpeedInsights />
+          {isVercel && (
+            <>
+              <Analytics />
+              <SpeedInsights />
+            </>
+          )}
         </Providers>
       </body>
     </html>
