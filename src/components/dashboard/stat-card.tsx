@@ -61,15 +61,15 @@ export function StatCard({ title, value, description, href }: StatCardProps) {
   const style = statStyles[title as keyof typeof statStyles];
   const Icon = style?.icon;
   const card = (
-    <Card>
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+    <Card className="h-full">
+      <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-1 sm:pb-3">
+        <CardTitle className="min-w-0 text-xs font-medium text-muted-foreground sm:text-sm">
           {title}
         </CardTitle>
 
         {Icon && style && (
           <span
-            className={`flex size-10 items-center justify-center rounded-xl ${style.background}`}
+            className={`hidden size-10 shrink-0 items-center justify-center rounded-xl sm:flex ${style.background}`}
           >
             <Icon className={`size-5 ${style.color}`} aria-hidden="true" />
           </span>
@@ -77,10 +77,12 @@ export function StatCard({ title, value, description, href }: StatCardProps) {
       </CardHeader>
 
       <CardContent>
-        <p className="text-3xl font-bold tracking-tight tabular-nums">
+        <p className="text-2xl font-bold tracking-tight tabular-nums sm:text-3xl">
           {value}
         </p>
-        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+        <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground sm:mt-1 sm:text-sm">
+          {description}
+        </p>
       </CardContent>
     </Card>
   );
@@ -92,7 +94,7 @@ export function StatCard({ title, value, description, href }: StatCardProps) {
   return (
     <Link
       href={href}
-      className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="block h-full rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {card}
     </Link>
