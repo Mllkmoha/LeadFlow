@@ -21,7 +21,7 @@ export default function Home() {
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-dvh bg-background">
       {/* Navigation */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
@@ -42,7 +42,7 @@ export default function Home() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login"
-              className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:px-4"
             >
               Sign in
             </Link>
@@ -52,7 +52,7 @@ export default function Home() {
               onClick={() =>
                 setTheme(resolvedTheme === "dark" ? "light" : "dark")
               }
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="inline-flex size-11 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:size-9"
               aria-label="Toggle theme"
             >
               <Sun className="hidden size-4 dark:block" />
@@ -322,19 +322,22 @@ export default function Home() {
                             initials: "JD",
                             name: "Jordan Davis",
                             action: "Contact added",
-                            color: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
+                            color:
+                              "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
                           },
                           {
                             initials: "AM",
                             name: "Alex Morgan",
                             action: "Follow-up completed",
-                            color: "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300",
+                            color:
+                              "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300",
                           },
                           {
                             initials: "SK",
                             name: "Sam Kim",
                             action: "Status updated",
-                            color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
+                            color:
+                              "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
                           },
                         ].map((activity) => (
                           <div
