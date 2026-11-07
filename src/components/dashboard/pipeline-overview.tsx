@@ -54,8 +54,8 @@ export function PipelineOverview({ counts }: PipelineOverviewProps) {
             const width = (value / maxValue) * 100;
 
             return (
-              <div key={stage.key} className="flex items-center gap-4">
-                <div className="w-24 text-sm text-muted-foreground">
+              <div key={stage.key} className="flex items-center gap-3 sm:gap-4">
+                <div className="w-20 shrink-0 text-sm text-muted-foreground sm:w-24">
                   {stage.label}
                 </div>
 
