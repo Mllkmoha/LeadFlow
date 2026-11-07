@@ -23,31 +23,29 @@ export function RecentContacts({ contacts }: RecentContactsProps) {
 
       <CardContent>
         {contacts.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No contacts yet.
-          </p>
+          <p className="text-sm text-muted-foreground">No contacts yet.</p>
         ) : (
           <div className="space-y-4">
             {contacts.map((contact) => (
               <div
                 key={contact.id}
-                className="flex items-center justify-between"
+                className="flex items-center justify-between gap-3"
               >
-                <div>
+                <div className="min-w-0">
                   <Link
                     href={`/contacts/${contact.id}`}
-                    className="font-medium hover:underline"
+                    className="block truncate font-medium hover:underline"
                   >
                     {contact.firstName} {contact.lastName}
                   </Link>
 
-                  <p className="text-sm text-muted-foreground">
+                  <p className="truncate text-sm text-muted-foreground">
                     {contact.company || "No company"}
                   </p>
                 </div>
 
-                <span className="text-sm text-muted-foreground">
-                  {contact.status}
+                <span className="shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs font-medium capitalize text-muted-foreground">
+                  {contact.status.toLowerCase()}
                 </span>
               </div>
             ))}
