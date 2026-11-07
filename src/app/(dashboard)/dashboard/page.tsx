@@ -138,15 +138,8 @@ export default async function DashboardPage() {
 
   return (
     <PageTransition>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Overview of your customer relationships.
-          </p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <StatCard
             title="Total Contacts"
             value={String(totalContacts)}
@@ -162,16 +155,16 @@ export default async function DashboardPage() {
           <StatCard
             title="Interested"
             value={String(interested)}
-            description="Potential customers"
+            description="Potential leads"
           />
 
           <StatCard
             title="Converted"
             value={String(converted)}
-            description="Successful conversions"
+            description="Won deals"
           />
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           <StatCard
             title="Overdue"
             value={String(overdueActivities)}
@@ -182,16 +175,17 @@ export default async function DashboardPage() {
           <StatCard
             title="Due Today"
             value={String(dueTodayActivities)}
-            description="Activities due today"
+            description="Due today"
             href="/activities?filter=TODAY"
           />
-
-          <StatCard
-            title="Upcoming"
-            value={String(upcomingActivities)}
-            description="Future activities"
-            href="/activities?filter=UPCOMING"
-          />
+          <div className="col-span-2 sm:col-span-1">
+            <StatCard
+              title="Upcoming"
+              value={String(upcomingActivities)}
+              description="Future activities"
+              href="/activities?filter=UPCOMING"
+            />
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -200,7 +194,7 @@ export default async function DashboardPage() {
         </div>
 
         <section className="overflow-hidden rounded-xl border bg-card">
-          <div className="border-b p-5">
+          <div className="border-b p-4 sm:p-5">
             <h2 className="font-semibold">Recent Activities</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Your latest customer-related activities.
@@ -208,7 +202,7 @@ export default async function DashboardPage() {
           </div>
 
           {recentActivities.length === 0 ? (
-            <p className="p-5 text-sm text-muted-foreground">
+            <p className="p-4 text-sm text-muted-foreground sm:p-5">
               No activities yet. Create an activity to see it here.
             </p>
           ) : (
@@ -216,7 +210,7 @@ export default async function DashboardPage() {
               {recentActivities.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 p-4 sm:p-5 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="min-w-0">
                     <p className="truncate font-medium">{activity.title}</p>
