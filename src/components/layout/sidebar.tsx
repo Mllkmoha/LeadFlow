@@ -1,45 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-
 import Link from "next/link";
-import {
-  Activity,
-  KanbanSquare,
-  LayoutDashboard,
-  Settings,
-  Users,
-} from "lucide-react";
-
 import Image from "next/image";
 
-const navigation = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Contacts",
-    href: "/contacts",
-    icon: Users,
-  },
-  {
-    label: "Pipeline",
-    href: "/pipeline",
-    icon: KanbanSquare,
-  },
-  {
-    label: "Activities",
-    href: "/activities",
-    icon: Activity,
-  },
-  {
-    label: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
-];
+import { navigation } from "./nav-items";
 
 export function Sidebar() {
   const pathname = usePathname();
