@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
+import { BottomNav } from "@/components/layout/bottom-nav";
 
 export default async function DashboardLayout({
   children,
@@ -26,6 +27,8 @@ export default async function DashboardLayout({
             {children}
           </div>
         </main>
+
+        <BottomNav />
       </div>
     </div>
   );
