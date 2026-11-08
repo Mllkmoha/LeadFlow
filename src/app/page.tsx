@@ -452,7 +452,21 @@ export default function Home() {
           className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6"
         >
           <span>© 2026 LeadFlow</span>
-          <span>Customer relationship management, simplified.</span>
+
+          <nav aria-label="Legal" className="flex items-center gap-1">
+            <Link
+              href="/terms"
+              className="inline-flex min-h-11 items-center rounded-md px-3 transition-colors hover:text-foreground"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="inline-flex min-h-11 items-center rounded-md px-3 transition-colors hover:text-foreground"
+            >
+              Privacy
+            </Link>
+          </nav>
         </motion.div>
       </footer>
     </main>
