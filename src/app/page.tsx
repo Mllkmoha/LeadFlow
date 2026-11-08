@@ -1,9 +1,9 @@
-"use client";
-
 import { ThemeToggle } from "@/components/theme-toggle";
 
+import { Reveal } from "@/components/reveal";
+
 import Link from "next/link";
-import { motion } from "motion/react";
+
 import {
   ArrowRight,
   BarChart3,
@@ -81,48 +81,37 @@ export default function Home() {
 
         <div className="mx-auto max-w-350 px-5 pb-16 pt-16 sm:px-8 sm:pb-20 sm:pt-28 lg:pb-28 lg:pt-32">
           <div className="mx-auto max-w-4xl text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mx-auto mb-7 inline-flex items-center gap-2 rounded-full border bg-background/70 px-3 py-2 text-xs shadow-sm backdrop-blur sm:px-4 sm:text-sm"
-            >
+            <div className="hero-in mx-auto mb-7 inline-flex items-center gap-2 rounded-full border bg-background/70 px-3 py-2 text-xs shadow-sm backdrop-blur sm:px-4 sm:text-sm">
               <Sparkles className="size-4 text-primary" />
               <span className="text-muted-foreground">
                 Meet your new favorite CRM
               </span>
               <ArrowRight className="size-3.5 text-primary" />
-            </motion.div>
+            </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.08 }}
-              className="text-4xl font-semibold leading-[1.05] tracking-[-0.055em] sm:text-6xl lg:text-8xl"
+            <h1
+              className="hero-in text-4xl font-semibold leading-[1.05] tracking-[-0.055em] sm:text-6xl lg:text-8xl"
+              style={{ "--delay": "0.08s" } as React.CSSProperties}
             >
               Every lead has
               <br />
               <span className="bg-linear-to-r from-primary via-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
                 a next step.
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.16 }}
-              className="mx-auto mt-7 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8"
+            <p
+              className="hero-in mx-auto mt-7 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8"
+              style={{ "--delay": "0.16s" } as React.CSSProperties}
             >
               Keep your contacts, sales pipeline, and follow-ups in one focused
               workspace. Spend less time organizing and more time building
               relationships.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.24 }}
-              className="mt-9 flex flex-col justify-center gap-3 sm:flex-row"
+            <div
+              className="hero-in mt-9 flex flex-col justify-center gap-3 sm:flex-row"
+              style={{ "--delay": "0.24s" } as React.CSSProperties}
             >
               <Link
                 href="/login"
@@ -139,7 +128,7 @@ export default function Home() {
                 Explore LeadFlow
                 <ArrowUpRight className="size-4" />
               </Link>
-            </motion.div>
+            </div>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground sm:text-sm">
               <span className="inline-flex items-center gap-1.5">
@@ -158,11 +147,9 @@ export default function Home() {
           </div>
 
           {/* Product preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 36, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative mx-auto mt-12 max-w-6xl sm:mt-20"
+                    <div
+            className="hero-in relative mx-auto mt-12 max-w-6xl sm:mt-20"
+            style={{ "--delay": "0.32s" } as React.CSSProperties}
           >
             <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-primary/10 blur-3xl" />
 
@@ -357,20 +344,14 @@ export default function Home() {
             <p className="mt-4 text-center text-xs text-muted-foreground">
               A preview of the LeadFlow workspace
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Features */}
       <section className="border-t bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mx-auto max-w-2xl text-center"
-          >
+          <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
               Everything you need to manage leads
             </h2>
@@ -378,7 +359,7 @@ export default function Home() {
               Keep your customer relationships organized from first contact to
               conversion.
             </p>
-          </motion.div>
+          </Reveal>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             <FeatureCard
@@ -404,11 +385,8 @@ export default function Home() {
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+        <Reveal
+          y={24}
           className="rounded-2xl border bg-card px-4 py-12 text-center shadow-sm sm:px-6 sm:py-16"
         >
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -426,18 +404,12 @@ export default function Home() {
             Get started
             <ArrowRight className="size-4" />
           </Link>
-        </motion.div>
+        </Reveal>
       </section>
 
       {/* Footer */}
       <footer className="border-t">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6"
-        >
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© 2026 LeadFlow</span>
 
           <nav aria-label="Legal" className="flex items-center gap-1">
@@ -454,7 +426,7 @@ export default function Home() {
               Privacy
             </Link>
           </nav>
-        </motion.div>
+        </div>
       </footer>
     </main>
   );
@@ -470,11 +442,8 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5 }}
+    <Reveal
+      y={24}
       className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 sm:p-6"
     >
       <div className="mb-5 flex size-12 items-center justify-center rounded-xl border border-primary/10 bg-linear-to-br from-primary/15 via-violet-500/10 to-blue-500/10 text-primary transition-transform duration-300 group-hover:scale-110">
@@ -486,6 +455,6 @@ function FeatureCard({
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         {description}
       </p>
-    </motion.div>
+    </Reveal>
   );
 }
