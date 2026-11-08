@@ -1,7 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -18,8 +17,6 @@ import {
 import Image from "next/image";
 
 export default function Home() {
-  const { resolvedTheme, setTheme } = useTheme();
-
   return (
     <main className="min-h-dvh bg-background">
       {/* Navigation */}
@@ -47,17 +44,7 @@ export default function Home() {
               Sign in
             </Link>
 
-            <button
-              type="button"
-              onClick={() =>
-                setTheme(resolvedTheme === "dark" ? "light" : "dark")
-              }
-              className="inline-flex size-11 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:size-9"
-              aria-label="Toggle theme"
-            >
-              <Sun className="hidden size-4 dark:block" />
-              <Moon className="size-4 dark:hidden" />
-            </button>
+            <ThemeToggle />
 
             <Link
               href="/login"
