@@ -24,7 +24,7 @@ export default function NewContactPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border bg-card p-6">
+        <div className="rounded-xl border bg-card p-4 sm:p-6">
           <ContactForm />
         </div>
       </div>
