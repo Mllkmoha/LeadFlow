@@ -19,6 +19,23 @@ import {
   Users,
 } from "lucide-react";
 
+const avatarGradients = [
+  "from-violet-500 to-indigo-500",
+  "from-sky-500 to-cyan-400",
+  "from-emerald-500 to-teal-400",
+  "from-amber-500 to-orange-500",
+  "from-rose-500 to-pink-500",
+  "from-fuchsia-500 to-purple-500",
+];
+
+function gradientFor(id: string) {
+  let hash = 0;
+  for (const char of id) {
+    hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  }
+  return avatarGradients[hash % avatarGradients.length];
+}
+
 type ContactDetailsPageProps = {
   params: Promise<{ id: string }>;
 };
@@ -55,91 +72,165 @@ export default async function ContactDetailsPage({
   return (
     <PageTransition>
       <div className="mx-auto max-w-3xl space-y-6">
-        <div>
+        <div className="space-y-4">
           <Link
             href="/contacts"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="inline-flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             ← Back to contacts
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <div
+              className={`flex size-16 shrink-0 items-center justify-center rounded-full bg-linear-to-br ${gradientFor(contact.id)} text-xl font-semibold text-white shadow-md ring-4 ring-background sm:size-20 sm:text-2xl`}
+            >
+              {`${contact.firstName[0] ?? ""}${contact.lastName[0] ?? ""}`.toUpperCase()}
+            </div>
+
+            <div className="min-w-0">
+              <h2 className="truncate text-xl font-semibold tracking-tight sm:text-2xl">
+                {contact.firstName} {contact.lastName}
+              </h2>
+
+              <p className="truncate text-sm text-muted-foreground">
+                {[contact.position, contact.company]
+                  .filter(Boolean)
+                  .join(" · ") || contact.email}
+              </p>
+
+              <span
+                className={`mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  {
+                    NEW: "bg-sky-500/10 text-sky-700 dark:text-sky-400",
+                    CONTACTED:
+                      "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+                    INTERESTED:
+                      "bg-violet-500/10 text-violet-700 dark:text-violet-400",
+                    CONVERTED:
+                      "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+                  }[contact.status] ?? "bg-muted"
+                }`}
+              >
+                {contact.status.charAt(0) +
+                  contact.status.slice(1).toLowerCase()}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             <Link
               href={`/contacts/${contact.id}/edit`}
-              className="rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+              className="inline-flex h-11 items-center justify-center rounded-lg border text-sm font-medium transition-colors hover:bg-muted"
             >
               Edit
             </Link>
 
             <DeleteContactButton contactId={contact.id} />
-
-            <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
-              {contact.status}
-            </span>
           </div>
         </div>
-
         <div className="rounded-xl border bg-card">
-          <div className="border-b px-6 py-4">
+          <div className="border-b px-4 py-3 sm:px-6 sm:py-4">
             <h2 className="font-semibold">Contact information</h2>
           </div>
 
-          <div className="grid gap-6 p-6 sm:grid-cols-2">
-            <div>
-              <p className="text-sm text-muted-foreground">First name</p>
-              <p className="mt-1 font-medium">{contact.firstName}</p>
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-5 p-4 sm:gap-6 sm:p-6">
+            <div className="col-span-2 min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Email
+              </dt>
+              <dd className="mt-1 truncate font-medium">
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="underline-offset-4 hover:underline"
+                >
+                  {contact.email}
+                </a>
+              </dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Last name</p>
-              <p className="mt-1 font-medium">{contact.lastName}</p>
+            <div className="col-span-2 min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Phone
+              </dt>
+              <dd className="mt-1 truncate font-medium">
+                {contact.phone ? (
+                  <a
+                    href={`tel:${contact.phone}`}
+                    className="underline-offset-4 hover:underline"
+                  >
+                    {contact.phone}
+                  </a>
+                ) : (
+                  <span className="text-muted-foreground">Not provided</span>
+                )}
+              </dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Email</p>
-              <p className="mt-1 font-medium">{contact.email}</p>
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                First name
+              </dt>
+              <dd className="mt-1 truncate font-medium">{contact.firstName}</dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Phone</p>
-              <p className="mt-1 font-medium">
-                {contact.phone || "Not provided"}
-              </p>
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Last name
+              </dt>
+              <dd className="mt-1 truncate font-medium">{contact.lastName}</dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Company</p>
-              <p className="mt-1 font-medium">
-                {contact.company || "Not provided"}
-              </p>
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Company
+              </dt>
+              <dd className="mt-1 truncate font-medium">
+                {contact.company || (
+                  <span className="text-muted-foreground">Not provided</span>
+                )}
+              </dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Position</p>
-              <p className="mt-1 font-medium">
-                {contact.position || "Not provided"}
-              </p>
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Position
+              </dt>
+              <dd className="mt-1 truncate font-medium">
+                {contact.position || (
+                  <span className="text-muted-foreground">Not provided</span>
+                )}
+              </dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Source</p>
-              <p className="mt-1 font-medium">
-                {contact.source || "Not provided"}
-              </p>
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Source
+              </dt>
+              <dd className="mt-1 truncate font-medium">
+                {contact.source || (
+                  <span className="text-muted-foreground">Not provided</span>
+                )}
+              </dd>
             </div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">Created</p>
-              <p className="mt-1 font-medium">
-                {contact.createdAt.toLocaleDateString()}
-              </p>
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground sm:text-sm">
+                Created
+              </dt>
+              <dd className="mt-1 truncate font-medium">
+                {contact.createdAt.toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </dd>
             </div>
-          </div>
+          </dl>
         </div>
 
         <NotesSection contactId={contact.id} />
         <section className="overflow-hidden rounded-xl border bg-card">
-          <div className="border-b p-5">
+          <div className="border-b px-4 py-3 sm:px-6 sm:py-4">
             <h2 className="font-semibold">Activities</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Calls, emails, meetings, and tasks for this contact.
@@ -189,7 +280,7 @@ export default async function ContactDetailsPage({
                 return (
                   <div
                     key={activity.id}
-                    className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
                   >
                     <div className="flex min-w-0 items-start gap-3">
                       <div className="rounded-lg bg-muted p-2.5">
