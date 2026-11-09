@@ -37,6 +37,8 @@ export function ContactsFilters() {
           aria-hidden="true"
         />
         <input
+          id="contact-search"
+          name="search"
           type="search"
           aria-label="Search contacts"
           placeholder="Search contacts..."
