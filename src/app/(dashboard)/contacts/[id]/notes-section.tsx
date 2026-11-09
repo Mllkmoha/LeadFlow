@@ -179,7 +179,7 @@ export function NotesSection({ contactId }: NotesSectionProps) {
   }
 
   function handleDelete(noteId: string) {
-  deleteNoteMutation.mutate(noteId);
+    deleteNoteMutation.mutate(noteId);
   }
 
   const notes = notesQuery.data ?? [];
@@ -200,13 +200,16 @@ export function NotesSection({ contactId }: NotesSectionProps) {
 
   return (
     <div className="rounded-xl border bg-card">
-      <div className="border-b px-6 py-4">
+      <div className="border-b px-4 py-3 sm:px-6 sm:py-4">
         <h2 className="font-semibold">Notes</h2>
       </div>
 
-      <div className="space-y-6 p-6">
+      <div className="space-y-5 p-4 sm:space-y-6 sm:p-6">
         <form onSubmit={handleSubmit} className="space-y-3">
           <textarea
+            id="new-note"
+            name="note"
+            aria-label="Write a note"
             value={content}
             onChange={(event) => setContent(event.target.value)}
             placeholder="Write a note..."
@@ -242,6 +245,9 @@ export function NotesSection({ contactId }: NotesSectionProps) {
                 {editingNoteId === note.id ? (
                   <div className="space-y-3">
                     <textarea
+                      id={`edit-note-${note.id}`}
+                      name="note"
+                      aria-label="Edit note"
                       value={editingContent}
                       onChange={(event) =>
                         setEditingContent(event.target.value)
@@ -295,8 +301,7 @@ export function NotesSection({ contactId }: NotesSectionProps) {
                         onDelete={() => handleDelete(note.id)}
                         isDeleting={isDeleting(note.id)}
                         disabled={
-                          deleteNoteMutation.isPending &&
-                          !isDeleting(note.id)
+                          deleteNoteMutation.isPending && !isDeleting(note.id)
                         }
                       />
                     </div>
