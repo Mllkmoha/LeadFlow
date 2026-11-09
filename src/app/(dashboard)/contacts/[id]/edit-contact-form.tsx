@@ -35,6 +35,11 @@ type ApiError = {
   error?: string;
 };
 
+const inputClass =
+  "h-11 w-full rounded-lg border bg-background px-3 text-base outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 sm:h-10 sm:text-sm";
+
+const selectClass = `${inputClass} appearance-none bg-[length:1rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10 [&>option]:bg-card [&>option]:text-foreground`;
+
 export function EditContactForm({ contact }: EditContactFormProps) {
   const router = useRouter();
 
@@ -104,10 +109,11 @@ export function EditContactForm({ contact }: EditContactFormProps) {
           <input
             id="firstName"
             name="firstName"
+            autoComplete="given-name"
             value={formData.firstName}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -118,10 +124,11 @@ export function EditContactForm({ contact }: EditContactFormProps) {
           <input
             id="lastName"
             name="lastName"
+            autoComplete="family-name"
             value={formData.lastName}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -133,10 +140,12 @@ export function EditContactForm({ contact }: EditContactFormProps) {
             id="email"
             name="email"
             type="email"
+            inputMode="email"
+            autoComplete="email"
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -147,9 +156,12 @@ export function EditContactForm({ contact }: EditContactFormProps) {
           <input
             id="phone"
             name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -160,9 +172,10 @@ export function EditContactForm({ contact }: EditContactFormProps) {
           <input
             id="company"
             name="company"
+            autoComplete="organization"
             value={formData.company}
             onChange={handleChange}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -173,9 +186,10 @@ export function EditContactForm({ contact }: EditContactFormProps) {
           <input
             id="position"
             name="position"
+            autoComplete="organization-title"
             value={formData.position}
             onChange={handleChange}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -186,9 +200,10 @@ export function EditContactForm({ contact }: EditContactFormProps) {
           <input
             id="source"
             name="source"
+            autoComplete="off"
             value={formData.source}
             onChange={handleChange}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={inputClass}
           />
         </div>
 
@@ -201,7 +216,11 @@ export function EditContactForm({ contact }: EditContactFormProps) {
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            className={selectClass}
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+            }}
           >
             <option value="NEW">New</option>
             <option value="CONTACTED">Contacted</option>
@@ -217,12 +236,12 @@ export function EditContactForm({ contact }: EditContactFormProps) {
         </p>
       )}
 
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <button
           type="button"
           onClick={() => router.back()}
           disabled={isSubmitting}
-          className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+          className="h-11 rounded-lg border px-5 text-sm font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 sm:h-10"
         >
           Cancel
         </button>
@@ -230,7 +249,7 @@ export function EditContactForm({ contact }: EditContactFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="h-11 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:h-10"
         >
           {isSubmitting ? "Saving..." : "Save changes"}
         </button>
