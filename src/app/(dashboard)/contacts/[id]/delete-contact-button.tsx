@@ -8,15 +8,12 @@ type DeleteContactButtonProps = {
   contactId: string;
 };
 
-export function DeleteContactButton({
-  contactId,
-}: DeleteContactButtonProps) {
+export function DeleteContactButton({ contactId }: DeleteContactButtonProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
     if (isDeleting) return;
-
 
     setIsDeleting(true);
 
@@ -39,6 +36,7 @@ export function DeleteContactButton({
 
   return (
     <DeleteButton
+      className="h-11 w-full"
       confirmMessage="Are you sure you want to delete this contact?"
       isDeleting={isDeleting}
       onDelete={handleDelete}
