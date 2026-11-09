@@ -11,6 +11,7 @@ type DeleteButtonProps = {
   label?: string;
   deletingLabel?: string;
   stopPropagation?: boolean;
+  className?: string;
 };
 
 export function DeleteButton({
@@ -21,6 +22,7 @@ export function DeleteButton({
   label = "Delete",
   deletingLabel = "Deleting...",
   stopPropagation = false,
+  className = "h-9 px-3",
 }: DeleteButtonProps) {
   const [isConfirming, setIsConfirming] = useState(false);
 
@@ -46,7 +48,7 @@ export function DeleteButton({
           if (!disabled && !isDeleting) setIsConfirming(true);
         }}
         disabled={disabled || isDeleting}
-        className="inline-flex h-9 items-center justify-center rounded-lg border border-destructive/40 px-3 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        className={`inline-flex items-center justify-center rounded-lg border border-destructive/40 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       >
         {isDeleting ? deletingLabel : label}
       </button>
