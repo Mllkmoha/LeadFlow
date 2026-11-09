@@ -1,3 +1,5 @@
+import { ChevronRight } from "lucide-react";
+
 import Link from "next/link";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
@@ -5,6 +7,30 @@ import { ContactStatus } from "@/../generated/prisma/client";
 import { PageTransition } from "@/components/layout/page-transition";
 
 import { ContactsFilters } from "./contacts-filters";
+
+const avatarGradients = [
+  "from-violet-500 to-indigo-500",
+  "from-sky-500 to-cyan-400",
+  "from-emerald-500 to-teal-400",
+  "from-amber-500 to-orange-500",
+  "from-rose-500 to-pink-500",
+  "from-fuchsia-500 to-purple-500",
+];
+
+function gradientFor(id: string) {
+  let hash = 0;
+  for (const char of id) {
+    hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  }
+  return avatarGradients[hash % avatarGradients.length];
+}
+
+const statusDots: Record<string, string> = {
+  NEW: "bg-sky-500",
+  CONTACTED: "bg-amber-500",
+  INTERESTED: "bg-violet-500",
+  CONVERTED: "bg-emerald-500",
+};
 
 type ContactsPageProps = {
   searchParams: Promise<{
@@ -82,18 +108,15 @@ export default async function ContactsPage({
 
   return (
     <PageTransition>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Contacts</h1>
-            <p className="text-muted-foreground">
-              Manage your customer relationships.
-            </p>
-          </div>
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-center justify-between gap-3">
+          <p className="min-w-0 text-sm text-muted-foreground sm:text-base">
+            Manage your customer relationships.
+          </p>
 
           <Link
             href="/contacts/new"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
             Add contact
           </Link>
@@ -146,16 +169,18 @@ export default async function ContactsPage({
                 return (
                   <div
                     key={contact.id}
-                    className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/40"
+                    className="group relative flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-muted/50 sm:gap-4 sm:px-5"
                   >
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                    <div
+                      className={`flex size-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br ${gradientFor(contact.id)} text-sm font-semibold text-white shadow-sm ring-2 ring-background`}
+                    >
                       {initials}
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/contacts/${contact.id}`}
-                        className="font-medium hover:underline"
+                        className="block truncate font-medium after:absolute after:inset-0"
                       >
                         {contact.firstName} {contact.lastName}
                       </Link>
@@ -165,21 +190,29 @@ export default async function ContactsPage({
                       </p>
 
                       {contact.company && (
-                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        <p className="truncate text-xs text-muted-foreground/70">
                           {contact.company}
                         </p>
                       )}
                     </div>
 
                     <span
-                      className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
+                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
                         statusStyles[contact.status] ??
                         "bg-muted text-muted-foreground"
                       }`}
                     >
+                      <span
+                        className={`size-1.5 rounded-full ${statusDots[contact.status] ?? "bg-muted-foreground"}`}
+                      />
                       {contact.status.charAt(0) +
                         contact.status.slice(1).toLowerCase()}
                     </span>
+
+                    <ChevronRight
+                      className="hidden size-4 shrink-0 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5 sm:block"
+                      aria-hidden="true"
+                    />
                   </div>
                 );
               })}
