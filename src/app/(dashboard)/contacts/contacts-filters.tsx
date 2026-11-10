@@ -51,7 +51,7 @@ export function ContactsFilters() {
       <div
         role="group"
         aria-label="Filter by status"
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
       >
         {statuses.map((status) => {
           const active = activeStatus === status.value;
