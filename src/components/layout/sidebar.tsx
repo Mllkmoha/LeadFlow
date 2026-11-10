@@ -1,5 +1,6 @@
 "use client";
 
+import { NavPending } from "./nav-pending";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -64,6 +65,7 @@ export function Sidebar() {
                 }`}
               />
               {item.label}
+              <NavPending />
             </Link>
           );
         })}
