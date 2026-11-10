@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+import { NavPending } from "./nav-pending";
 import { navigation } from "./nav-items";
 
 export function BottomNav() {
@@ -30,7 +30,10 @@ export function BottomNav() {
                   active ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                <Icon className="size-5" aria-hidden="true" />
+                <span className="relative">
+                  <Icon className="size-5" aria-hidden="true" />
+                  <NavPending className="absolute -right-1 -top-1" />
+                </span>
                 {item.label}
               </Link>
             </li>
