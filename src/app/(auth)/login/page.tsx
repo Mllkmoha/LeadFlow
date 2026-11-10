@@ -18,7 +18,7 @@ function BrandLogo() {
         width={34}
         height={34}
         priority
-        className="size-7 object-contain sm:size-[34px]"
+        className="size-7 object-contain sm:size-8.5"
       />
     </div>
   );
