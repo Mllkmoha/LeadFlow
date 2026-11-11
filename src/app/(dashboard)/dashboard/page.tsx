@@ -14,6 +14,13 @@ function getTime() {
   return performance.now();
 }
 
+function getGreeting(date: Date) {
+  const hour = date.getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export default async function DashboardPage() {
   const session = await auth();
 
@@ -22,6 +29,8 @@ export default async function DashboardPage() {
   }
 
   const userId = session.user.id;
+
+  const firstName = session.user.name?.split(" ")[0] ?? "there";
 
   const now = new Date();
 
@@ -139,6 +148,19 @@ export default async function DashboardPage() {
   return (
     <PageTransition>
       <div className="space-y-4 sm:space-y-6">
+        <div className="space-y-1">
+          <p className="text-xl font-semibold tracking-tight sm:text-3xl">
+            {getGreeting(now)}, {firstName}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {overdueActivities > 0
+              ? `You have ${overdueActivities} overdue ${overdueActivities === 1 ? "activity" : "activities"} to take care of.`
+              : dueTodayActivities > 0
+                ? `${dueTodayActivities} ${dueTodayActivities === 1 ? "activity is" : "activities are"} due today.`
+                : "You're all caught up. Nice work."}
+          </p>
+        </div>
+
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <StatCard
             title="Total Contacts"
@@ -170,6 +192,7 @@ export default async function DashboardPage() {
             value={String(overdueActivities)}
             description="Past-due activities"
             href="/activities?filter=OVERDUE"
+            highlight={overdueActivities > 0}
           />
 
           <StatCard
