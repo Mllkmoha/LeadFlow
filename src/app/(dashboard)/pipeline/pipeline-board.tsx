@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { gradientFor } from "@/lib/avatar";
+
 import {
   DndContext,
   DragOverlay,
@@ -25,6 +27,7 @@ type Contact = {
   email: string;
   company: string | null;
   status: ContactStatus;
+  createdAt: Date | string;
 };
 
 type PipelineBoardProps = {
@@ -76,6 +79,16 @@ const columns: {
     badge: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
   },
 ];
+
+function daysAgo(value: Date | string) {
+  const days = Math.floor(
+    (Date.now() - new Date(value).getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  if (days <= 0) return "Today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
+}
 
 export function PipelineBoard({ contacts }: PipelineBoardProps) {
   const [items, setItems] = useState(contacts);
@@ -189,6 +202,12 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
     });
   }
 
+  function handleMove(contactId: string, status: ContactStatus) {
+    if (updateStatusMutation.isPending) return;
+
+    updateStatusMutation.mutate({ contactId, status });
+  }
+
   const totalContacts = items.length;
 
   return (
@@ -199,7 +218,7 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
       onDragStart={handleDragStart}
       onDragCancel={() => setActiveContact(null)}
     >
-      <div className="grid gap-4 lg:grid-cols-4">
+      <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 scrollbar-none sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 xl:mx-0 xl:grid xl:snap-none xl:grid-cols-4 xl:gap-4 xl:overflow-visible xl:px-0 xl:pb-0 [&::-webkit-scrollbar]:hidden">
         {columns.map((column) => (
           <PipelineColumn
             key={column.id}
@@ -210,6 +229,7 @@ export function PipelineBoard({ contacts }: PipelineBoardProps) {
             badge={column.badge}
             contacts={items.filter((contact) => contact.status === column.id)}
             totalContacts={totalContacts}
+            onMove={handleMove}
           />
         ))}
       </div>
@@ -257,6 +277,7 @@ type PipelineColumnProps = {
   badge: string;
   contacts: Contact[];
   totalContacts: number;
+  onMove: (contactId: string, status: ContactStatus) => void;
 };
 
 function PipelineColumn({
@@ -266,23 +287,18 @@ function PipelineColumn({
   accent,
   badge,
   contacts,
-  totalContacts,
+  onMove,
 }: PipelineColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
-
-  const percentage =
-    contacts.length === 0
-      ? 0
-      : Math.round((contacts.length / totalContacts) * 100);
 
   return (
     <div
       ref={setNodeRef}
-      className={`min-h-100 rounded-xl border border-t-4 bg-card p-4 transition-colors ${accent} ${
+      className={`w-[85%] shrink-0 snap-center rounded-xl border border-t-4 bg-card p-4 transition-colors sm:w-[48%] lg:w-[32%] xl:min-h-100 xl:w-auto xl:shrink ${accent} ${
         isOver ? "bg-muted/60 ring-2 ring-primary/20" : ""
       }`}
     >
-      <div className="mb-4 border-b pb-4">
+      <div className="mb-3 border-b pb-3">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-semibold tracking-tight">{title}</h2>
 
@@ -294,24 +310,11 @@ function PipelineColumn({
         </div>
 
         <p className="mt-1 text-xs text-muted-foreground">{description}</p>
-
-        <div className="mt-3">
-          <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-            <span>Pipeline share</span>
-            <span>{percentage}%</span>
-          </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-primary transition-all duration-300"
-              style={{ width: `${percentage}%` }}
-            />
-          </div>
-        </div>
       </div>
 
       <div className="space-y-3">
         {contacts.map((contact) => (
-          <PipelineCard key={contact.id} contact={contact} />
+          <PipelineCard key={contact.id} contact={contact} onMove={onMove} />
         ))}
 
         {contacts.length === 0 && (
@@ -339,9 +342,10 @@ function PipelineColumn({
 
 type PipelineCardProps = {
   contact: Contact;
+  onMove: (contactId: string, status: ContactStatus) => void;
 };
 
-function PipelineCard({ contact }: PipelineCardProps) {
+function PipelineCard({ contact, onMove }: PipelineCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: contact.id });
 
@@ -374,7 +378,9 @@ function PipelineCard({ contact }: PipelineCardProps) {
         }}
       >
         <div className="flex items-start gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+          <div
+            className={`flex size-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br ${gradientFor(contact.id)} text-xs font-semibold text-white shadow-sm`}
+          >
             {initials}
           </div>
 
@@ -385,7 +391,7 @@ function PipelineCard({ contact }: PipelineCardProps) {
               </p>
 
               <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-               {columns.find((column) => column.id === contact.status)?.title} 
+                {columns.find((column) => column.id === contact.status)?.title}
               </span>
             </div>
 
@@ -395,14 +401,38 @@ function PipelineCard({ contact }: PipelineCardProps) {
           </div>
         </div>
 
-        {contact.company && (
-          <div className="mt-3 border-t pt-2.5">
-            <p className="truncate text-xs text-muted-foreground">
-              {contact.company}
-            </p>
-          </div>
-        )}
+        <div className="mt-3 flex items-center justify-between gap-2 border-t pt-2.5 text-xs text-muted-foreground">
+          <span className="truncate">{contact.company ?? "No company"}</span>
+          <span className="shrink-0">{daysAgo(contact.createdAt)}</span>
+        </div>
       </Link>
+
+      <div
+        className="mt-3 flex items-center gap-2 whitespace-nowrap border-t pt-2.5"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
+        <label
+          htmlFor={`move-${contact.id}`}
+          className="text-xs text-muted-foreground"
+        >
+          Move to
+        </label>
+        <select
+          id={`move-${contact.id}`}
+          name="status"
+          value={contact.status}
+          onChange={(event) =>
+            onMove(contact.id, event.target.value as ContactStatus)
+          }
+          className="h-9 flex-1 rounded-lg border bg-background px-2 text-base outline-none focus:border-primary sm:text-xs"
+        >
+          {columns.map((column) => (
+            <option key={column.id} value={column.id}>
+              {column.title}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
