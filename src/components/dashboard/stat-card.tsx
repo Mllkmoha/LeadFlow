@@ -17,6 +17,7 @@ type StatCardProps = {
   value: string;
   description: string;
   href?: string;
+  highlight?: boolean;
 };
 
 const statStyles = {
@@ -57,11 +58,19 @@ const statStyles = {
   },
 };
 
-export function StatCard({ title, value, description, href }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  description,
+  href,
+  highlight = false,
+}: StatCardProps) {
   const style = statStyles[title as keyof typeof statStyles];
   const Icon = style?.icon;
   const card = (
-    <Card className="h-full">
+    <Card
+      className={`h-full ${highlight ? "bg-rose-500/5 ring-rose-500/40" : ""}`}
+    >
       <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-1 sm:pb-3">
         <CardTitle className="min-w-0 text-xs font-medium text-muted-foreground sm:text-sm">
           {title}
