@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ContactStatus } from "@/../generated/prisma/client";
+import { gradientFor } from "@/lib/avatar";
 
 type RecentContact = {
   id: string;
@@ -27,11 +28,14 @@ export function RecentContacts({ contacts }: RecentContactsProps) {
         ) : (
           <div className="space-y-4">
             {contacts.map((contact) => (
-              <div
-                key={contact.id}
-                className="flex items-center justify-between gap-3"
-              >
-                <div className="min-w-0">
+              <div key={contact.id} className="flex items-center gap-3">
+                <div
+                  className={`flex size-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br ${gradientFor(contact.id)} text-sm font-semibold text-white shadow-sm`}
+                >
+                  {`${contact.firstName[0] ?? ""}${contact.lastName[0] ?? ""}`.toUpperCase()}
+                </div>
+
+                <div className="min-w-0 flex-1">
                   <Link
                     href={`/contacts/${contact.id}`}
                     className="block truncate font-medium hover:underline"
