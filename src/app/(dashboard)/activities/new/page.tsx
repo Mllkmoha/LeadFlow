@@ -25,7 +25,7 @@ export default function NewActivityPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border bg-card p-6">
+        <div className="rounded-xl border bg-card p-4 sm:p-6">
           <ActivityForm />
         </div>
       </div>
