@@ -7,7 +7,7 @@ export default function PipelineLoading() {
     >
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-20 rounded-xl border bg-card" />
+          <div key={i} className="h-20 rounded-xl border bg-muted-foreground/5" />
         ))}
       </div>
 
@@ -15,14 +15,14 @@ export default function PipelineLoading() {
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="w-[85%] shrink-0 space-y-3 rounded-xl border border-t-4 bg-card p-4 sm:w-[48%] lg:w-[32%] xl:w-auto xl:shrink"
+            className="w-[85%] shrink-0 space-y-3 rounded-xl border border-t-4 bg-muted-foreground/5 p-4 sm:w-[48%] lg:w-[32%] xl:w-auto xl:shrink"
           >
             <div className="flex items-center justify-between">
-              <div className="h-4 w-24 rounded bg-muted" />
-              <div className="h-6 w-7 rounded-full bg-muted" />
+              <div className="h-4 w-24 rounded bg-muted-foreground/15" />
+              <div className="h-6 w-7 rounded-full bg-muted-foreground/15" />
             </div>
-            <div className="h-3 w-36 rounded bg-muted" />
-            <div className="h-28 rounded-xl bg-muted" />
+            <div className="h-3 w-36 rounded bg-muted-foreground/15" />
+            <div className="h-28 rounded-xl bg-muted-foreground/15" />
           </div>
         ))}
       </div>

@@ -6,32 +6,32 @@ export default function ContactsLoading() {
       aria-label="Loading contacts"
     >
       <div className="flex items-center justify-between gap-3">
-        <div className="h-4 w-48 rounded bg-muted" />
-        <div className="h-11 w-32 rounded-lg bg-muted" />
+        <div className="h-4 w-48 rounded bg-muted-foreground/15" />
+        <div className="h-11 w-32 rounded-lg bg-muted-foreground/15" />
       </div>
 
       <div className="space-y-3">
-        <div className="h-11 rounded-xl border bg-card" />
+        <div className="h-11 rounded-xl border bg-muted-foreground/5" />
         <div className="flex gap-2 overflow-hidden">
           {[56, 64, 96, 96, 96].map((w, i) => (
             <div
               key={i}
               style={{ width: w }}
-              className="h-10 shrink-0 rounded-full border bg-card"
+              className="h-10 shrink-0 rounded-full border bg-muted-foreground/5"
             />
           ))}
         </div>
       </div>
 
-      <div className="divide-y overflow-hidden rounded-xl border bg-card">
+      <div className="divide-y overflow-hidden rounded-xl border border-muted-foreground/20 bg-muted-foreground/5">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 px-4 py-3.5 sm:px-5">
-            <div className="size-11 shrink-0 rounded-full bg-muted" />
+            <div className="size-11 shrink-0 rounded-full bg-muted-foreground/15" />
             <div className="min-w-0 flex-1 space-y-2">
-              <div className="h-3.5 w-2/5 rounded bg-muted" />
-              <div className="h-3 w-3/5 rounded bg-muted" />
+              <div className="h-3.5 w-2/5 rounded bg-muted-foreground/15" />
+              <div className="h-3 w-3/5 rounded bg-muted-foreground/15" />
             </div>
-            <div className="h-6 w-16 shrink-0 rounded-full bg-muted" />
+            <div className="h-6 w-16 shrink-0 rounded-full bg-muted-foreground/15" />
           </div>
         ))}
       </div>
