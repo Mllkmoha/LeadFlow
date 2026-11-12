@@ -29,7 +29,7 @@ export default async function EditActivityPage({
           </p>
         </div>
 
-        <div className="rounded-xl border bg-card p-6">
+        <div className="rounded-xl border bg-card p-4 sm:p-6">
           <ActivityEditForm id={id} />
         </div>
       </div>
