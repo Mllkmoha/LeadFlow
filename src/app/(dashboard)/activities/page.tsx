@@ -9,7 +9,6 @@ import {
   Activity as ActivityIcon,
   CalendarDays,
   CheckCircle2,
-  Circle,
   Clock3,
   Mail,
   Phone,
@@ -208,58 +207,81 @@ export default async function ActivitiesPage({
     }),
   ]);
 
+  const dueTodayCount = await prisma.activity.count({
+    where: {
+      ...userWhere,
+      completed: false,
+      dueDate: { gte: today, lt: tomorrow },
+    },
+  });
+
   return (
     <PageTransition>
       <div className="space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Activities
-            </h1>
-            <p className="mt-1 text-muted-foreground">
-              Keep track of calls, emails, meetings, and tasks.
-            </p>
-          </div>
+        <div className="flex items-center justify-between gap-3">
+          <p className="min-w-0 text-sm text-muted-foreground sm:text-base">
+            {pendingCount} pending · {completedCount} completed
+          </p>
 
           <Link
             href="/activities/new"
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
-            + New Activity
+            + New
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <Link
+            href="/activities?filter=OVERDUE"
+            className={`rounded-xl border p-3 transition-colors sm:p-4 ${
+              overdueCount > 0 ? "border-rose-500/40 bg-rose-500/5" : "bg-card"
+            }`}
+          >
+            <p className="text-xs text-muted-foreground">Overdue</p>
+            <p
+              className={`mt-1 text-2xl font-bold tabular-nums ${
+                overdueCount > 0 ? "text-rose-600 dark:text-rose-400" : ""
+              }`}
+            >
+              {overdueCount}
+            </p>
+          </Link>
+
+          <Link
+            href="/activities?filter=TODAY"
+            className={`rounded-xl border p-3 transition-colors sm:p-4 ${
+              dueTodayCount > 0 ? "border-sky-500/40 bg-sky-500/5" : "bg-card"
+            }`}
+          >
+            <p className="text-xs text-muted-foreground">Today</p>
+            <p
+              className={`mt-1 text-2xl font-bold tabular-nums ${
+                dueTodayCount > 0 ? "text-sky-600 dark:text-sky-400" : ""
+              }`}
+            >
+              {dueTodayCount}
+            </p>
+          </Link>
+
+          <Link
+            href="/activities?filter=PENDING"
+            className="rounded-xl border bg-card p-3 transition-colors sm:p-4"
+          >
+            <p className="text-xs text-muted-foreground">Pending</p>
+            <p className="mt-1 text-2xl font-bold tabular-nums">
+              {pendingCount}
+            </p>
           </Link>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border bg-card p-5">
-            <p className="text-sm text-muted-foreground">Total activities</p>
-            <p className="mt-2 text-2xl font-semibold">{totalCount}</p>
-          </div>
-
-          <div className="rounded-xl border bg-card p-5">
-            <p className="text-sm text-muted-foreground">Pending</p>
-            <p className="mt-2 text-2xl font-semibold">{pendingCount}</p>
-          </div>
-
-          <div className="rounded-xl border bg-card p-5">
-            <p className="text-sm text-muted-foreground">Completed</p>
-            <p className="mt-2 text-2xl font-semibold">{completedCount}</p>
-          </div>
-
-          <div className="rounded-xl border bg-card p-5">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">Overdue</p>
-              <Clock3 className="size-4 text-red-500" />
-            </div>
-            <p className="mt-2 text-2xl font-semibold">{overdueCount}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Pending activities past their due date
-            </p>
-          </div>
-        </div>
-
         <ActivityFilters value={activeFilter} />
-        <ActivitySearch />
-        <ActivitySort value={activeSort} />
+
+        <div className="flex gap-2">
+          <div className="min-w-0 flex-1">
+            <ActivitySearch />
+          </div>
+          <ActivitySort value={activeSort} />
+        </div>
 
         <section className="overflow-hidden rounded-xl border bg-card">
           <div className="border-b p-5">
@@ -311,102 +333,94 @@ export default async function ActivitiesPage({
                 const Icon = activityIcons[activity.type];
                 const label = activityLabels[activity.type];
 
+                const isOverdue =
+                  !activity.completed &&
+                  !!activity.dueDate &&
+                  activity.dueDate < today;
+                const isToday =
+                  !activity.completed &&
+                  !!activity.dueDate &&
+                  activity.dueDate >= today &&
+                  activity.dueDate < tomorrow;
+
                 return (
                   <div
                     key={activity.id}
-                    className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"
+                    className={`flex items-start gap-2 px-3 py-3 sm:gap-3 sm:px-5 sm:py-4 ${
+                      isOverdue ? "bg-rose-500/5" : ""
+                    }`}
                   >
-                    <div className="flex min-w-0 items-start gap-3">
-                      <div className="rounded-lg bg-muted p-2.5">
-                        <Icon className="size-5 text-muted-foreground" />
+                    <ActivityCompletionButton
+                      activityId={activity.id}
+                      completed={activity.completed}
+                    />
+
+                    <div className="min-w-0 flex-1 pt-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3
+                          className={`font-medium ${
+                            activity.completed
+                              ? "text-muted-foreground line-through"
+                              : ""
+                          }`}
+                        >
+                          {activity.title}
+                        </h3>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                          <Icon className="size-3" aria-hidden="true" />
+                          {label}
+                        </span>
                       </div>
 
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-medium">{activity.title}</h3>
-                          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs">
-                            {label}
-                          </span>
-                        </div>
+                      {activity.content && (
+                        <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                          {activity.content}
+                        </p>
+                      )}
 
-                        {activity.content && (
-                          <p className="mt-1 text-sm text-muted-foreground">
-                            {activity.content}
-                          </p>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                        {activity.dueDate && (
+                          <span
+                            className={`inline-flex items-center gap-1.5 ${
+                              isOverdue
+                                ? "font-medium text-rose-600 dark:text-rose-400"
+                                : isToday
+                                  ? "font-medium text-sky-600 dark:text-sky-400"
+                                  : ""
+                            }`}
+                          >
+                            {isOverdue ? (
+                              <Clock3 className="size-4" />
+                            ) : (
+                              <CalendarDays className="size-4" />
+                            )}
+                            {isToday
+                              ? "Today"
+                              : activity.dueDate.toLocaleDateString("en-GB", {
+                                  day: "numeric",
+                                  month: "short",
+                                })}
+                          </span>
                         )}
 
                         <Link
                           href={`/contacts/${activity.contact.id}`}
-                          className="mt-2 inline-block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                          className="truncate underline-offset-4 hover:text-foreground hover:underline"
                         >
                           {activity.contact.firstName}{" "}
                           {activity.contact.lastName}
-                          {activity.contact.company
-                            ? ` · ${activity.contact.company}`
-                            : ""}
                         </Link>
                       </div>
-                    </div>
 
-                    <div className="flex shrink-0 flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      {activity.dueDate && (
-                        <span
-                          className={`flex items-center gap-1.5 ${
-                            !activity.completed && activity.dueDate < today
-                              ? "font-medium text-red-600 dark:text-red-400"
-                              : activity.dueDate >= today &&
-                                  activity.dueDate < tomorrow
-                                ? "font-medium text-blue-600 dark:text-blue-400"
-                                : ""
-                          }`}
+                      <div className="mt-3 flex items-center gap-2">
+                        <Link
+                          href={`/activities/${activity.id}/edit`}
+                          className="inline-flex h-9 items-center rounded-lg border bg-background px-3 text-sm font-medium transition-colors hover:bg-muted"
                         >
-                          {!activity.completed && activity.dueDate < today ? (
-                            <Clock3 className="size-4" />
-                          ) : (
-                            <CalendarDays className="size-4" />
-                          )}
-
-                          {!activity.completed &&
-                          activity.dueDate >= today &&
-                          activity.dueDate < tomorrow
-                            ? "Today"
-                            : activity.dueDate.toLocaleDateString("en-GB", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}
-                        </span>
-                      )}
-
-                      <span
-                        className={
-                          activity.completed
-                            ? "flex items-center gap-1.5 text-foreground"
-                            : "flex items-center gap-1.5"
-                        }
-                      >
-                        {activity.completed ? (
-                          <CheckCircle2 className="size-4" />
-                        ) : (
-                          <Circle className="size-4" />
-                        )}
-
-                        {activity.completed ? "Completed" : "Pending"}
-                      </span>
-
-                      <Link
-                        href={`/activities/${activity.id}/edit`}
-                        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      >
-                        Edit
-                      </Link>
-
-                      <ActivityCompletionButton
-                        activityId={activity.id}
-                        completed={activity.completed}
-                      />
-
-                      <DeleteActivityButton activityId={activity.id} />
+                          Edit
+                        </Link>
+                        <DeleteActivityButton activityId={activity.id} />
+                      </div>
                     </div>
                   </div>
                 );
