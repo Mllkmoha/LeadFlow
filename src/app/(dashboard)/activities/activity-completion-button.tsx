@@ -61,14 +61,20 @@ export function ActivityCompletionButton({
         aria-label={
           isCompleted ? "Reopen activity" : "Mark activity as completed"
         }
-        className="inline-flex h-9 items-center justify-center rounded-lg border border-emerald-600/30 bg-emerald-600/10 px-3 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-600/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400"
+        className="inline-flex size-11 items-center justify-center rounded-full text-emerald-600 transition-colors hover:bg-emerald-600/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400"
       >
         {isCompleted ? (
-          <CheckCircle2 className="size-4" />
+          <CheckCircle2 className="size-7" />
         ) : (
-          <Circle className="size-4" />
+          <Circle className="size-7" />
         )}
-        {isUpdating ? "Updating..." : isCompleted ? "Reopen" : "Mark completed"}
+        <span className="sr-only">
+          {isUpdating
+            ? "Updating..."
+            : isCompleted
+              ? "Reopen"
+              : "Mark completed"}
+        </span>
       </button>
 
       {error && <p className="text-xs text-destructive">{error}</p>}
