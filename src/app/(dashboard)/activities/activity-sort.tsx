@@ -1,4 +1,3 @@
-
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -13,10 +12,10 @@ const sortOptions: {
   label: string;
   value: ActivitySortOption;
 }[] = [
-  { label: "Newest first", value: "NEWEST" },
-  { label: "Oldest first", value: "OLDEST" },
-  { label: "Due date (earliest first)", value: "DUE_DATE" },
-  { label: "Title (A–Z)", value: "TITLE" },
+  { label: "Newest", value: "NEWEST" },
+  { label: "Oldest", value: "OLDEST" },
+  { label: "Due date", value: "DUE_DATE" },
+  { label: "A-Z", value: "TITLE" },
 ];
 
 export function ActivitySort({ value }: ActivitySortProps) {
@@ -38,11 +37,8 @@ export function ActivitySort({ value }: ActivitySortProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <label
-        htmlFor="activity-sort"
-        className="text-sm font-medium text-muted-foreground"
-      >
+    <div className="flex shrink-0 items-center gap-2">
+      <label htmlFor="activity-sort" className="sr-only">
         Sort by
       </label>
 
@@ -52,7 +48,8 @@ export function ActivitySort({ value }: ActivitySortProps) {
         onChange={(event) =>
           handleSortChange(event.target.value as ActivitySortOption)
         }
-        className="rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        name="sort"
+        className="h-11 w-28 rounded-lg border bg-background px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-10 sm:w-auto sm:px-3"
       >
         {sortOptions.map((option) => (
           <option key={option.value} value={option.value}>

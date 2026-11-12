@@ -48,9 +48,9 @@ export function ActivitySearch() {
             router.replace(pathname);
           }
         }}
-        placeholder="Search activities or contacts..."
+        placeholder="Search..."
         aria-label="Search activities or contacts"
-        className="min-w-0 flex-1 rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="h-11 min-w-0 flex-1 rounded-lg border bg-background px-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-10 sm:text-sm"
       />
     </div>
   );
