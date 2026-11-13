@@ -1,9 +1,8 @@
-
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 
 const pageInfo: Record<string, { title: string; description: string }> = {
   "/dashboard": {
@@ -33,10 +32,7 @@ export function Header() {
 
   const currentPage =
     Object.entries(pageInfo)
-      .filter(
-        ([path]) =>
-          pathname === path || pathname.startsWith(`${path}/`),
-      )
+      .filter(([path]) => pathname === path || pathname.startsWith(`${path}/`))
       .sort(([a], [b]) => b.length - a.length)[0]?.[1] ??
     pageInfo["/dashboard"];
 
@@ -54,10 +50,7 @@ export function Header() {
             >
               Home
             </Link>
-            <ChevronRight
-              className="size-3.5 opacity-60"
-              aria-hidden="true"
-            />
+            <ChevronRight className="size-3.5 opacity-60" aria-hidden="true" />
             <span className="truncate text-foreground/70">
               {currentPage.title}
             </span>
@@ -71,6 +64,21 @@ export function Header() {
             {currentPage.description}
           </p>
         </div>
+
+        <button
+          type="button"
+          onClick={() =>
+            window.dispatchEvent(new Event("open-command-palette"))
+          }
+          aria-label="Search and commands"
+          className="inline-flex h-11 shrink-0 items-center gap-2 rounded-lg border bg-background px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:h-10 sm:min-w-52"
+        >
+          <Search className="size-4" aria-hidden="true" />
+          <span className="hidden sm:inline">Search...</span>
+          <kbd className="ml-auto hidden rounded border px-1.5 py-0.5 text-[10px] lg:block">
+            Ctrl K
+          </kbd>
+        </button>
       </div>
     </header>
   );

@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { CommandPalette } from "@/components/layout/command-palette";
 
 export default async function DashboardLayout({
   children,
@@ -30,6 +31,8 @@ export default async function DashboardLayout({
 
         <BottomNav />
       </div>
+
+      <CommandPalette />
     </div>
   );
 }
