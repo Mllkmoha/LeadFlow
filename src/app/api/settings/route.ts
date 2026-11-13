@@ -32,8 +32,8 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body: unknown = await request.json();
-
+  const body: unknown = await request.json().catch(() => null);
+  
   if (
     typeof body !== "object" ||
     body === null ||
@@ -52,15 +52,24 @@ export async function PATCH(request: Request) {
     );
   }
 
-  const user = await prisma.user.update({
-    where: { id: session.user.id },
-    data: { name },
-    select: {
-      name: true,
-      email: true,
-      createdAt: true,
-    },
-  });
+  try {
+    const user = await prisma.user.update({
+      where: { id: session.user.id },
+      data: { name },
+      select: {
+        name: true,
+        email: true,
+        createdAt: true,
+      },
+    });
 
-  return NextResponse.json(user);
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error("UPDATE SETTINGS ERROR:", error);
+
+    return NextResponse.json(
+      { error: "Failed to update settings" },
+      { status: 500 },
+    );
+  }
 }
