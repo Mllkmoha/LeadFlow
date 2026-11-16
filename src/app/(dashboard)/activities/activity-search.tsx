@@ -1,7 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+export function buildActivitySearchUrl(
+  pathname: string,
+  currentSearchParams: string | URLSearchParams,
+  searchQuery: string,
+): string {
+  const params = new URLSearchParams(currentSearchParams.toString());
+  const search = searchQuery.trim();
+
+  if (search) {
+    params.set("search", search);
+  } else {
+    params.delete("search");
+  }
+
+  const query = params.toString();
+  return query ? `${pathname}?${query}` : pathname;
+}
 
 export function ActivitySearch() {
   const pathname = usePathname();
@@ -10,30 +28,32 @@ export function ActivitySearch() {
   const currentSearch = searchParams.get("search") ?? "";
   const [value, setValue] = useState(currentSearch);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-      const search = value.trim();
+  const applySearch = useCallback(
+    (searchQuery: string) => {
+      const nextUrl = buildActivitySearchUrl(
+        pathname,
+        searchParams,
+        searchQuery,
+      );
+      const currentQuery = searchParams.toString();
+      const currentUrl = currentQuery
+        ? `${pathname}?${currentQuery}`
+        : pathname;
 
-      if (search) {
-        params.set("search", search);
-      } else {
-        params.delete("search");
-      }
-
-      const query = params.toString();
-      const nextUrl = query ? `${pathname}?${query}` : pathname;
-
-      if (
-        nextUrl !== `${pathname}?${searchParams.toString()}` &&
-        !(nextUrl === pathname && searchParams.size === 0)
-      ) {
+      if (nextUrl !== currentUrl) {
         router.replace(nextUrl);
       }
+    },
+    [pathname, router, searchParams],
+  );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      applySearch(value);
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [value, pathname, router, searchParams]);
+  }, [value, applySearch]);
 
   return (
     <div className="flex gap-2">
@@ -45,7 +65,7 @@ export function ActivitySearch() {
           setValue(nextValue);
 
           if (!nextValue) {
-            router.replace(pathname);
+            applySearch("");
           }
         }}
         placeholder="Search..."
