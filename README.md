@@ -47,19 +47,7 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
 <!-- 
 <img width="2880" height="2266" alt="image" src="https://github.com/user-attachments/assets/609634ab-e5e0-45e8-906a-0061c23cbeb1" />
 -->
-<div align="center">
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
-      <p><i>Dashboard & Analytics</i></p>
-      <code><!-- Add Dashboard Screenshot Here --></code>
-    </div>
-    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
-      <p><i>Visual Sales Pipeline</i></p>
-      <code><!-- Add Pipeline Screenshot Here --></code>
-    </div>
-  </div>
-</div>
-
+https://github.com/Mllkmoha/LeadFlow/issues/1#issue-6454509414
 ---
 
 ## 🎯 The Solution
