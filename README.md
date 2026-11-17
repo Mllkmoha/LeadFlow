@@ -48,15 +48,22 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
 
 <p align="center">
   <img
-    src="https://leadflow-coral-six.vercel.app/leadflow-dashboard.png"
+    src="./public/leadflow-dashboard.png"
     alt="LeadFlow CRM Dashboard"
     width="100%"
   />
 </p>
 
----
+### Live Demo
 
----
+<p align="center">
+  <img
+    src="./public/leadflow-preview.gif"
+    alt="LeadFlow CRM Demo"
+    width="100%"
+  />
+</p>
+
 ---
 
 ## 🎯 The Solution
