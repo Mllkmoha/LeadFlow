@@ -48,6 +48,8 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
 <img width="2880" height="2266" alt="image" src="https://github.com/user-attachments/assets/609634ab-e5e0-45e8-906a-0061c23cbeb1" />
 -->
 https://github.com/Mllkmoha/LeadFlow/issues/1#issue-6454509414
+
+screencapture-leadflow-coral-six-vercel-app-dashboard-2026-11-17-22_15_00.png
 ---
 
 ## 🎯 The Solution
