@@ -45,7 +45,7 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
 ## 🖼️ Project Preview
 
 <!-- 
-  👉 ACTION: Replace these with actual screenshots for maximum impact
+<img width="2880" height="2266" alt="image" src="https://github.com/user-attachments/assets/609634ab-e5e0-45e8-906a-0061c23cbeb1" />
 -->
 <div align="center">
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
