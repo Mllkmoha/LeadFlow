@@ -44,23 +44,38 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
 
 ## 🖼️ Project Preview
 
-<div align="center">
-
 ### Dashboard
 
-<a href="https://leadflow-coral-six.vercel.app/">
-  <img src="https://leadflow-coral-six.vercel.app/leadflow-dashboard.png" alt="LeadFlow CRM Dashboard" width="100%" />
-</a>
-
-*LeadFlow dashboard — contact management and sales pipeline overview.*
+<p align="center">
+  <img
+    src="https://leadflow-coral-six.vercel.app/leadflow-dashboard.png"
+    alt="LeadFlow CRM Dashboard"
+    width="100%"
+  />
+</p>
 
 ### Product Demo
 
-[▶️ Watch the LeadFlow Demo (74 seconds)](https://leadflow-coral-six.vercel.app/leadflow-demo.webm)
+<p align="center">
+  <video
+    src="https://leadflow-coral-six.vercel.app/leadflow-demo.webm"
+    controls
+    muted
+    playsinline
+    width="100%"
+  >
+    Your browser does not support HTML video.
+    <a href="https://leadflow-coral-six.vercel.app/leadflow-demo.webm">Watch the demo</a>
+  </video>
+</p>
 
-[**View Live Application →**](https://leadflow-coral-six.vercel.app/)
+<p align="center">
+  <a href="https://leadflow-coral-six.vercel.app/">
+    <strong>View Live Application →</strong>
+  </a>
+</p>
 
-</div>
+---
 
 ---
 ---
