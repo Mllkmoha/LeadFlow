@@ -44,22 +44,19 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
 
 ## 🖼️ Project Preview
 
-<!-- 
-  👉 ACTION: Replace these with actual screenshots for maximum impact
--->
-<div align="center">
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
-      <p><i>Dashboard & Analytics</i></p>
-      <code><!-- Add Dashboard Screenshot Here --></code>
-    </div>
-    <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
-      <p><i>Visual Sales Pipeline</i></p>
-      <code><!-- Add Pipeline Screenshot Here --></code>
-    </div>
-  </div>
-</div>
+### Dashboard
 
+<p align="center">
+  <img
+    src="https://leadflow-coral-six.vercel.app/leadflow-dashboard.png"
+    alt="LeadFlow CRM Dashboard"
+    width="100%"
+  />
+</p>
+
+---
+
+---
 ---
 
 ## 🎯 The Solution
