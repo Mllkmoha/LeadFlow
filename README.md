@@ -54,27 +54,6 @@ Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via *
   />
 </p>
 
-### Product Demo
-
-<p align="center">
-  <video
-    src="https://leadflow-coral-six.vercel.app/leadflow-demo.webm"
-    controls
-    muted
-    playsinline
-    width="100%"
-  >
-    Your browser does not support HTML video.
-    <a href="https://leadflow-coral-six.vercel.app/leadflow-demo.webm">Watch the demo</a>
-  </video>
-</p>
-
-<p align="center">
-  <a href="https://leadflow-coral-six.vercel.app/">
-    <strong>View Live Application →</strong>
-  </a>
-</p>
-
 ---
 
 ---
