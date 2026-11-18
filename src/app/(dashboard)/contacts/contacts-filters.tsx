@@ -25,6 +25,8 @@ export function ContactsFilters() {
       params.delete(name);
     }
 
+    params.delete("page");
+
     const query = params.toString();
     router.replace(query ? `/contacts?${query}` : "/contacts");
   }
