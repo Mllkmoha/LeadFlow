@@ -3,10 +3,12 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { ContactStatus } from "@/../generated/prisma/client";
 import { PageTransition } from "@/components/layout/page-transition";
 
 import { ContactsFilters } from "./contacts-filters";
+import { ContactsPagination } from "./contacts-pagination";
+import { getPagination } from "@/lib/pagination";
+import { ContactStatus, Prisma } from "@/../generated/prisma/client";
 
 const avatarGradients = [
   "from-violet-500 to-indigo-500",
@@ -36,6 +38,7 @@ type ContactsPageProps = {
   searchParams: Promise<{
     search?: string;
     status?: string;
+    page?: string;
   }>;
 };
 
@@ -43,7 +46,7 @@ export default async function ContactsPage({
   searchParams,
 }: ContactsPageProps) {
   const session = await auth();
-  const { search, status } = await searchParams;
+  const { search, status, page } = await searchParams;
 
   if (!session?.user?.id) {
     return null;
@@ -54,56 +57,40 @@ export default async function ContactsPage({
     (validStatus) => validStatus === status,
   );
 
+  const where: Prisma.ContactWhereInput = {
+    userId: session.user.id,
+
+    ...(search?.trim()
+      ? {
+          AND: search
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .map((term) => ({
+              OR: [
+                { firstName: { contains: term, mode: "insensitive" } },
+                { lastName: { contains: term, mode: "insensitive" } },
+                { email: { contains: term, mode: "insensitive" } },
+                { company: { contains: term, mode: "insensitive" } },
+              ],
+            })),
+        }
+      : {}),
+
+    ...(selectedStatus ? { status: selectedStatus } : {}),
+  };
+
+  const totalContacts = await prisma.contact.count({ where });
+
+  const pagination = getPagination(totalContacts, Number(page ?? 1), 12);
+
   const contacts = await prisma.contact.findMany({
-    where: {
-      userId: session.user.id,
-
-      ...(search?.trim()
-        ? {
-            AND: search
-              .trim()
-              .split(/\s+/)
-              .filter(Boolean)
-              .map((term) => ({
-                OR: [
-                  {
-                    firstName: {
-                      contains: term,
-                      mode: "insensitive",
-                    },
-                  },
-                  {
-                    lastName: {
-                      contains: term,
-                      mode: "insensitive",
-                    },
-                  },
-                  {
-                    email: {
-                      contains: term,
-                      mode: "insensitive",
-                    },
-                  },
-                  {
-                    company: {
-                      contains: term,
-                      mode: "insensitive",
-                    },
-                  },
-                ],
-              })),
-          }
-        : {}),
-
-      ...(selectedStatus
-        ? {
-            status: selectedStatus,
-          }
-        : {}),
-    },
+    where,
     orderBy: {
       createdAt: "desc",
     },
+    skip: pagination.skip,
+    take: pagination.take,
   });
 
   return (
@@ -219,6 +206,15 @@ export default async function ContactsPage({
             </div>
           )}
         </div>
+        {totalContacts > 12 && (
+          <ContactsPagination
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            totalItems={totalContacts}
+            search={search}
+            status={selectedStatus}
+          />
+        )}
       </div>
     </PageTransition>
   );
