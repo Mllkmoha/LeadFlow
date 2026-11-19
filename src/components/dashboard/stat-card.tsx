@@ -18,6 +18,7 @@ type StatCardProps = {
   description: string;
   href?: string;
   highlight?: boolean;
+  actionLabel?: string;
 };
 
 const statStyles = {
@@ -64,6 +65,7 @@ export function StatCard({
   description,
   href,
   highlight = false,
+  actionLabel,
 }: StatCardProps) {
   const style = statStyles[title as keyof typeof statStyles];
   const Icon = style?.icon;
@@ -92,6 +94,11 @@ export function StatCard({
         <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground sm:mt-1 sm:text-sm">
           {description}
         </p>
+        {actionLabel && (
+          <p className="mt-2 text-xs font-medium text-primary">
+            {actionLabel} →
+          </p>
+        )}
       </CardContent>
     </Card>
   );
