@@ -8,16 +8,32 @@ import { PageTransition } from "@/components/layout/page-transition";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { ContactStatus } from "@/../generated/prisma/client";
 
 function getTime() {
   return performance.now();
 }
 
+async function measureQuery<T>(
+  name: string,
+  query: () => Promise<T>,
+): Promise<T> {
+  const start = performance.now();
+
+  try {
+    return await query();
+  } finally {
+    console.log(
+      `[Dashboard] ${name}: ${(performance.now() - start).toFixed(2)}ms`,
+    );
+  }
+}
+
 function getGreeting(date: Date) {
   const hour = date.getHours();
+
   if (hour < 12) return "Good morning";
   if (hour < 18) return "Good afternoon";
+
   return "Good evening";
 }
 
@@ -29,7 +45,6 @@ export default async function DashboardPage() {
   }
 
   const userId = session.user.id;
-
   const firstName = session.user.name?.split(" ")[0] ?? "there";
 
   const now = new Date();
@@ -44,106 +59,156 @@ export default async function DashboardPage() {
 
   const queryStart = getTime();
 
-  const [
-    overdueActivities,
-    dueTodayActivities,
-    upcomingActivities,
-    recentActivities,
-    totalContacts,
-    newLeads,
-    interested,
-    converted,
-    recentContacts,
-    pipeline,
-  ] = await Promise.all([
-    (async () => {
-      const start = getTime();
+  const [activityStats, recentActivities, contactStats, recentContacts] =
+    await Promise.all([
+      // 1. Activity statistics: 3 queries -> 1 query
+      measureQuery(
+        "Activity stats",
+        () =>
+          prisma.$queryRaw<
+            {
+              overdueActivities: bigint;
+              dueTodayActivities: bigint;
+              upcomingActivities: bigint;
+            }[]
+          >`
+        SELECT
+          COUNT(*) FILTER (
+            WHERE a."completed" = false
+            AND a."dueDate" < ${startOfToday}
+          ) AS "overdueActivities",
 
-      const result = await prisma.activity.count({
-        where: {
-          contact: { userId },
-          completed: false,
-          dueDate: { lt: startOfToday },
-        },
-      });
+          COUNT(*) FILTER (
+            WHERE a."completed" = false
+            AND a."dueDate" >= ${startOfToday}
+            AND a."dueDate" < ${startOfTomorrow}
+          ) AS "dueTodayActivities",
 
-      console.log(
-        `[Dashboard] Overdue query: ${(getTime() - start).toFixed(2)}ms`,
-      );
+          COUNT(*) FILTER (
+            WHERE a."completed" = false
+            AND a."dueDate" >= ${startOfTomorrow}
+          ) AS "upcomingActivities"
 
-      return result;
-    })(),
-    prisma.activity.count({
-      where: {
-        contact: { userId },
-        completed: false,
-        dueDate: { gte: startOfToday, lt: startOfTomorrow },
-      },
-    }),
-    prisma.activity.count({
-      where: {
-        contact: { userId },
-        completed: false,
-        dueDate: { gte: startOfTomorrow },
-      },
-    }),
-    prisma.activity.findMany({
-      where: { contact: { userId } },
-      include: {
-        contact: {
-          select: { id: true, firstName: true, lastName: true },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-    }),
-    prisma.contact.count({ where: { userId } }),
-    prisma.contact.count({
-      where: {
-        userId,
-        status: ContactStatus.NEW,
-        createdAt: { gte: startOfMonth },
-      },
-    }),
-    prisma.contact.count({
-      where: { userId, status: ContactStatus.INTERESTED },
-    }),
-    prisma.contact.count({
-      where: { userId, status: ContactStatus.CONVERTED },
-    }),
-    prisma.contact.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        company: true,
-        status: true,
-      },
-    }),
-    prisma.contact.groupBy({
-      by: ["status"],
-      where: { userId },
-      _count: { _all: true },
-    }),
-  ]);
+        FROM "Activity" a
+        INNER JOIN "Contact" c
+          ON c."id" = a."contactId"
+        WHERE c."userId" = ${userId}
+      `,
+      ),
+
+      // 2. Recent activities
+      measureQuery("Recent activities", () =>
+        prisma.activity.findMany({
+          where: {
+            contact: { userId },
+          },
+          select: {
+            id: true,
+            title: true,
+            completed: true,
+            createdAt: true,
+            contact: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 5,
+        }),
+      ),
+
+      // 3. Contact statistics + pipeline: 5 queries -> 1 query
+      measureQuery(
+        "Contact stats",
+        () =>
+          prisma.$queryRaw<
+            {
+              totalContacts: bigint;
+              newLeads: bigint;
+              interested: bigint;
+              converted: bigint;
+              pipelineNew: bigint;
+              pipelineContacted: bigint;
+            }[]
+          >`
+        SELECT
+          COUNT(*) AS "totalContacts",
+
+          COUNT(*) FILTER (
+            WHERE "status" = 'NEW'
+            AND "createdAt" >= ${startOfMonth}
+          ) AS "newLeads",
+
+          COUNT(*) FILTER (
+            WHERE "status" = 'INTERESTED'
+          ) AS "interested",
+
+          COUNT(*) FILTER (
+            WHERE "status" = 'CONVERTED'
+          ) AS "converted",
+
+          COUNT(*) FILTER (
+            WHERE "status" = 'NEW'
+          ) AS "pipelineNew",
+
+          COUNT(*) FILTER (
+            WHERE "status" = 'CONTACTED'
+          ) AS "pipelineContacted"
+
+        FROM "Contact"
+        WHERE "userId" = ${userId}
+      `,
+      ),
+
+      // 4. Recent contacts
+      measureQuery("Recent contacts", () =>
+        prisma.contact.findMany({
+          where: {
+            userId,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 5,
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            company: true,
+            status: true,
+          },
+        }),
+      ),
+    ]);
 
   console.log(
     `[Dashboard] Database queries: ${(getTime() - queryStart).toFixed(2)}ms`,
   );
 
+  const activityData = activityStats[0];
+  const contactData = contactStats[0];
+
+  const overdueActivities = Number(activityData.overdueActivities);
+  const dueTodayActivities = Number(activityData.dueTodayActivities);
+  const upcomingActivities = Number(activityData.upcomingActivities);
+
+  const totalContacts = Number(contactData.totalContacts);
+  const newLeads = Number(contactData.newLeads);
+  const interested = Number(contactData.interested);
+  const converted = Number(contactData.converted);
+
   const pipelineCounts = {
-    NEW: 0,
-    CONTACTED: 0,
-    INTERESTED: 0,
-    CONVERTED: 0,
+    NEW: Number(contactData.pipelineNew),
+    CONTACTED: Number(contactData.pipelineContacted),
+    INTERESTED: interested,
+    CONVERTED: converted,
   };
 
-  for (const stage of pipeline) {
-    pipelineCounts[stage.status] = stage._count._all;
-  }
 
   return (
     <PageTransition>
@@ -152,11 +217,16 @@ export default async function DashboardPage() {
           <p className="text-xl font-semibold tracking-tight sm:text-3xl">
             {getGreeting(now)}, {firstName}
           </p>
+
           <p className="text-sm text-muted-foreground">
             {overdueActivities > 0
-              ? `You have ${overdueActivities} overdue ${overdueActivities === 1 ? "activity" : "activities"} to take care of.`
+              ? `You have ${overdueActivities} overdue ${
+                  overdueActivities === 1 ? "activity" : "activities"
+                } to take care of.`
               : dueTodayActivities > 0
-                ? `${dueTodayActivities} ${dueTodayActivities === 1 ? "activity is" : "activities are"} due today.`
+                ? `${dueTodayActivities} ${
+                    dueTodayActivities === 1 ? "activity is" : "activities are"
+                  } due today.`
                 : "You're all caught up. Nice work."}
           </p>
         </div>
@@ -186,6 +256,7 @@ export default async function DashboardPage() {
             description="Won deals"
           />
         </div>
+
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           <StatCard
             title="Overdue"
@@ -193,6 +264,7 @@ export default async function DashboardPage() {
             description="Past-due activities"
             href="/activities?filter=OVERDUE"
             highlight={overdueActivities > 0}
+            actionLabel="Review overdue activities"
           />
 
           <StatCard
@@ -200,13 +272,16 @@ export default async function DashboardPage() {
             value={String(dueTodayActivities)}
             description="Due today"
             href="/activities?filter=TODAY"
+            actionLabel="View today's schedule"
           />
+
           <div className="col-span-2 sm:col-span-1">
             <StatCard
               title="Upcoming"
               value={String(upcomingActivities)}
               description="Future activities"
               href="/activities?filter=UPCOMING"
+              actionLabel="Explore upcoming activities"
             />
           </div>
         </div>
@@ -219,6 +294,7 @@ export default async function DashboardPage() {
         <section className="overflow-hidden rounded-xl border bg-card">
           <div className="border-b p-4 sm:p-5">
             <h2 className="font-semibold">Recent Activities</h2>
+
             <p className="mt-1 text-sm text-muted-foreground">
               Your latest customer-related activities.
             </p>
@@ -233,10 +309,11 @@ export default async function DashboardPage() {
               {recentActivities.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex flex-col gap-2 p-4 sm:p-5 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
                 >
                   <div className="min-w-0">
                     <p className="truncate font-medium">{activity.title}</p>
+
                     <Link
                       href={`/contacts/${activity.contact.id}`}
                       className="mt-1 block text-sm text-muted-foreground transition-colors hover:text-primary hover:underline"
@@ -258,6 +335,7 @@ export default async function DashboardPage() {
                       ) : (
                         <Clock className="size-3.5" aria-hidden="true" />
                       )}
+
                       {activity.completed ? "Completed" : "Pending"}
                     </span>
 
