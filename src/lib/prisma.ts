@@ -1,4 +1,3 @@
-
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -22,16 +21,20 @@ const ca = readFileSync(
   "utf8",
 );
 
+const isVercel = process.env.VERCEL === "1";
+
 const adapter = new PrismaPg({
   connectionString: databaseUrl.toString(),
+  max: isVercel ? 3 : 5,
+  idleTimeoutMillis: isVercel ? 10_000 : 300_000,
+  connectionTimeoutMillis: 10_000,
   ssl: {
     ca,
     rejectUnauthorized: true,
   },
 });
 
-export const prisma =
-  globalForPrisma.prisma ?? new PrismaClient({ adapter });
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
