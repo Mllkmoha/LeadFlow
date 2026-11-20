@@ -2,6 +2,12 @@ import { describe, expect, it } from "vitest";
 import { csvCell, toCsv } from "./csv";
 
 describe("csvCell", () => {
+  it("neutralizes formulas preceded by whitespace", () => {
+    expect(csvCell(" =1+1")).toBe('"\' =1+1"');
+    expect(csvCell("\n=1+1")).toBe('"\'\n=1+1"');
+    expect(csvCell("\u00A0=1+1")).toBe('"\'\u00A0=1+1"');
+  });
+
   it("wraps plain text in quotes", () => {
     expect(csvCell("Daniel")).toBe('"Daniel"');
   });
@@ -24,8 +30,8 @@ describe("csvCell", () => {
   });
 
   it("neutralizes international phone numbers starting with plus", () => {
-  expect(csvCell("+49 151 23456789")).toBe("\"'+49 151 23456789\"");
-});
+    expect(csvCell("+49 151 23456789")).toBe('"\'+49 151 23456789"');
+  });
 
   it("keeps German characters", () => {
     expect(csvCell("Güden")).toBe('"Güden"');
