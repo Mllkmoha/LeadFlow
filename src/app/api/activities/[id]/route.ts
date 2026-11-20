@@ -85,28 +85,12 @@ export async function PATCH(
       }
     }
 
-    const activity = await prisma.activity.findFirst({
+    const updateResult = await prisma.activity.updateMany({
       where: {
         id,
         contact: {
           userId: session.user.id,
         },
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    if (!activity) {
-      return NextResponse.json(
-        { error: "Activity not found" },
-        { status: 404 },
-      );
-    }
-
-    const updatedActivity = await prisma.activity.update({
-      where: {
-        id: activity.id,
       },
       data: {
         ...result.data,
@@ -117,6 +101,29 @@ export async function PATCH(
             : undefined,
       },
     });
+
+    if (updateResult.count === 0) {
+      return NextResponse.json(
+        { error: "Activity not found" },
+        { status: 404 },
+      );
+    }
+
+    const updatedActivity = await prisma.activity.findFirst({
+      where: {
+        id,
+        contact: {
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (!updatedActivity) {
+      return NextResponse.json(
+        { error: "Activity not found" },
+        { status: 404 },
+      );
+    }
 
     return NextResponse.json(updatedActivity);
   } catch (error) {
@@ -139,30 +146,21 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
   try {
     const { id } = await params;
 
-    const activity = await prisma.activity.findFirst({
+    const result = await prisma.activity.deleteMany({
       where: {
         id,
         contact: {
           userId: session.user.id,
         },
       },
-      select: {
-        id: true,
-      },
     });
 
-    if (!activity) {
+    if (result.count === 0) {
       return NextResponse.json(
         { error: "Activity not found" },
         { status: 404 },
       );
     }
-
-    await prisma.activity.delete({
-      where: {
-        id: activity.id,
-      },
-    });
 
     return NextResponse.json({
       message: "Activity deleted successfully",
