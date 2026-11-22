@@ -35,6 +35,9 @@ export async function GET(_request: Request, { params }: RouteContext) {
     const notes = await prisma.note.findMany({
       where: {
         contactId: id,
+        contact: {
+          userId: session.user.id,
+        },
       },
       orderBy: {
         createdAt: "desc",
