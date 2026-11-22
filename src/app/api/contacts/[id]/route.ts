@@ -117,22 +117,17 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
   try {
     const { id } = await params;
 
-    const existingContact = await prisma.contact.findFirst({
+    // Check ownership and delete in one database operation
+    const result = await prisma.contact.deleteMany({
       where: {
         id,
         userId: session.user.id,
       },
     });
 
-    if (!existingContact) {
+    if (result.count === 0) {
       return NextResponse.json({ error: "Contact not found" }, { status: 404 });
     }
-
-    await prisma.contact.delete({
-      where: {
-        id,
-      },
-    });
 
     return NextResponse.json({ message: "Contact deleted successfully" });
   } catch (error) {
