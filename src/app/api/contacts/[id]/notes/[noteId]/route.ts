@@ -37,20 +37,6 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       );
     }
 
-    const note = await prisma.note.findFirst({
-      where: {
-        id: noteId,
-        contactId: id,
-        contact: {
-          userId: session.user.id,
-        },
-      },
-    });
-
-    if (!note) {
-      return NextResponse.json({ error: "Note not found" }, { status: 404 });
-    }
-
     const updatedNote = await prisma.note.updateMany({
       where: {
         id: noteId,
@@ -102,20 +88,6 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
 
   try {
     const { id, noteId } = await params;
-
-    const note = await prisma.note.findFirst({
-      where: {
-        id: noteId,
-        contactId: id,
-        contact: {
-          userId: session.user.id,
-        },
-      },
-    });
-
-    if (!note) {
-      return NextResponse.json({ error: "Note not found" }, { status: 404 });
-    }
 
     const deletedNote = await prisma.note.deleteMany({
       where: {
