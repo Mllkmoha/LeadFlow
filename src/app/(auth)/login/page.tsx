@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LoginButton } from "./login-button";
 
+export const dynamic = "force-dynamic";
+
 const benefits = [
   "Keep every contact organized",
   "Track opportunities in one place",
