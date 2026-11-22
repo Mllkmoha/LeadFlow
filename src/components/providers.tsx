@@ -6,9 +6,10 @@ import { useState } from "react";
 
 type ProvidersProps = {
   children: React.ReactNode;
+  nonce?: string;
 };
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children, nonce }: ProvidersProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -21,14 +22,7 @@ export function Providers({ children }: ProvidersProps) {
   );
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      scriptProps={
-        typeof window !== "undefined" ? { type: "application/json" } : undefined
-      }
-    >
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThemeProvider>
   );
