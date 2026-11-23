@@ -24,24 +24,6 @@
 
 ---
 
-## 📈 Performance Benchmarks
-
-Unlike most portfolio projects, LeadFlow is engineered for speed. Verified via **Google Lighthouse** on a production build:
-
-| Metric | Score | Status |
-| :--- | :---: | :--- |
-| **Performance** | **96** | 🟢 Elite |
-| **Accessibility** | **100** | 🟢 Perfect |
-| **Best Practices** | **100** | 🟢 Perfect |
-| **SEO** | **100** | 🟢 Perfect |
-
-**Core Web Vitals:**
-- **LCP**: 0.6s (Fastest possible feel)
-- **TBT**: 90ms (Zero lag interactions)
-- **CLS**: 0 (Pixel-perfect stability)
-
----
-
 ## 🖼️ Project Preview
 
 ### Dashboard
@@ -78,11 +60,19 @@ Most CRMs are either too simple (spreadsheets) or too bloated (Enterprise softwa
 
 | Feature | Engineering Implementation | Business Value |
 | :--- | :--- | :--- |
-| **Sales Pipeline** | Relational status tracking with Prisma `groupBy` | Visualize the sales funnel at a glance. |
-| **Contact CRM** | Full CRUD with Zod-validated server actions | Maintain a clean, high-integrity lead database. |
+| **Sales Pipeline** | Four-stage Kanban board with drag-and-drop using `@dnd-kit/core` | Visualize the sales funnel at a glance. |
+| **Contact CRM** | Full CRUD with Zod-validated API route handlers | Maintain a clean, high-integrity lead database. |
 | **Interaction Log** | One-to-many relationship: Contacts $\rightarrow$ Activities/Notes | Never forget a detail from a client call. |
 | **Secure Auth** | GitHub OAuth $\rightarrow$ JWT Session $\rightarrow$ DB Sync | Enterprise-grade security with zero-friction login. |
 | **Adaptive UI** | Tailwind 4 + shadcn/ui + Motion | Professional look that works on mobile and desktop. |
+
+### Dashboard
+
+The dashboard displays key metrics and recent activity:
+
+- **Activity/Contact Statistics**: PostgreSQL raw SQL aggregates count records by stage and type.
+- **Pipeline Counts**: Derived in JavaScript from the contact stage aggregates, applying business logic for display.
+- **Recent Records**: Fetched with Prisma `findMany` queries, ordered by updated timestamps.
 
 ---
 
@@ -114,19 +104,39 @@ graph TD
 
 ```text
 src/
-├── app/                    # Routing & Layouts (App Router)
-│   ├── (auth)/             # Identity Management
-│   ├── (dashboard)/       # Core Product Logic
-│   └── api/                # Type-safe REST Endpoints
-├── components/             # Atomic Design System
-│   ├── ui/                 # Base Primitives (Shadcn)
-│   ├── pipeline/           # Kanban Logic
-│   └── contacts/           # CRM View Logic
-├── lib/                    # Infrastructure & Config
-│   ├── prisma.ts           # Database Singleton
-│   └── validations/       # Zod Data Contracts
-├── services/               # Business Logic Layer
-└── auth.ts                 # OAuth Configuration
+├── app/
+│   ├── (auth)/login/             # OAuth sign-in page and buttons
+│   ├── (dashboard)/               # Authenticated application shell and pages
+│   │   ├── dashboard/             # Stats, recent contacts, pipeline overview
+│   │   ├── contacts/              # List, create, detail, edit, notes, delete
+│   │   ├── pipeline/              # Drag-and-drop stage board
+│   │   ├── activities/            # List, create, edit, complete, delete
+│   │   └── settings/              # Profile name, theme, CSV export
+│   ├── api/                       # Route handlers (JSON and CSV)
+│   ├── actions/
+│   │   └── auth.ts                # Only server action: sign out
+│   ├── privacy/                   # Public privacy policy
+│   ├── terms/                     # Public terms of service
+│   ├── page.tsx                   # Public landing page
+│   ├── layout.tsx                 # Fonts, providers, analytics
+│   └── globals.css                # Tailwind 4 import + Deal Ledger tokens
+├── components/
+│   ├── dashboard/                 # StatCard, RecentContacts, PipelineOverview
+│   ├── layout/                    # Sidebar, Header, BottomNav, CommandPalette
+│   ├── legal/                     # LegalPageLayout
+│   ├── ui/                        # Button, Card primitives
+│   ├── delete-button.tsx          # Shared confirmation dialog
+│   ├── providers.tsx              # Theme + React Query providers
+│   ├── reveal.tsx                 # Motion reveal wrapper
+│   └── theme-toggle.tsx           # Light/dark toggle
+├── lib/
+│   ├── prisma.ts                  # Prisma client + pg adapter + SSL
+│   ├── validations/               # Zod schemas for contacts and activities
+│   ├── csv.ts                     # CSV escaping and formula neutralization
+│   ├── pagination.ts              # Page clamping helper
+│   └── avatar.ts                  # Deterministic gradient selection
+├── proxy.ts                       # Next.js 16 proxy: CSP nonce and headers
+└── auth.ts                        # OAuth configuration
 ```
 
 ---
@@ -143,16 +153,19 @@ src/
 
 2. **Configure `.env`**
    ```env
-   DATABASE_URL="postgresql://..."
-   AUTH_SECRET="your_secret"
-   AUTH_GITHUB_ID="your_id"
-   AUTH_GITHUB_SECRET="your_secret"
+   DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB"
+   AUTH_SECRET="generate with: npx auth secret"
+   AUTH_GITHUB_ID=""
+   AUTH_GITHUB_SECRET=""
+   AUTH_GOOGLE_ID=""
+   AUTH_GOOGLE_SECRET=""
    ```
 
 3. **Sync Database**
-   ```bash
-   npx prisma db push
-   ```
+   - **Development**: Run `npx prisma migrate dev` to create and apply migrations during local development.
+   - **Production**: Run `npx prisma migrate deploy` to apply committed migrations to a production database.
+   - The repository contains `prisma/migrations/0001_baseline`.
+   - **Warning**: Do not blindly run production migrations on a non-empty database until you have verified its migration history and baseline status.
 
 4. **Launch**
    ```bash
@@ -161,11 +174,12 @@ src/
 
 ---
 
-## 📈 Roadmap
+## 📊 Roadmap
 
 - [ ] **Automated Follow-ups**: System-generated reminders for overdue activities.
 - [ ] **Advanced Reporting**: Conversion rate analytics and lead-velocity tracking.
-- [ ] **CSV Engine**: Bulk import/export for enterprise data migration.
+- [ ] **CSV Import**: Bulk import for enterprise data migration.
+- [x] **CSV Export**: Contacts and activities export from Settings (notes excluded).
 
 ---
 
