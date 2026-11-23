@@ -191,9 +191,7 @@ export default function PrivacyPolicyPage() {
           Deleting a contact also removes its associated notes and activities.
         </p>
         <p className="mt-3">
-          LeadFlow does not currently provide an automatic account deletion or
-          data export feature. To request access to, correction of, or deletion
-          of your account information, email us at:
+          You can export your contacts and activities as CSV from Settings; notes are excluded. Automatic account deletion is unavailable. To request access to, correction of, or deletion of your account information, email us at:
         </p>
         <p className="mt-3">
           <a
@@ -205,7 +203,7 @@ export default function PrivacyPolicyPage() {
         </p>
         <p className="mt-3">
           For an account deletion request, use the subject line
-          <strong className="text-foreground"> LeadFlow Account Deletion </strong> 
+          <strong className="text-foreground"> LeadFlow Account Deletion </strong>
           and send the request from the email address associated with your
           account. We may ask for reasonable information to verify that you
           control the account before processing the request. Account deletion
