@@ -4,12 +4,102 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * LeadFlow — The Deal Ledger
+ * Design foundation: tokens and typography only.
+ * See DESIGN.md for the full specification.
+ *
+ * The ledger tokens below are the source of truth. The shadcn tokens further
+ * down are a compatibility layer so existing components keep working without
+ * being redesigned in this phase.
+ */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  /* Typography ------------------------------------------------------------ */
+  --font-sans: var(--font-plex-sans);
+  --font-heading: var(--font-fraunces);
+  --font-mono: var(--font-plex-mono);
+
+  /* Type scale (DESIGN.md §4.2) ------------------------------------------- */
+  --text-display-xl: 3.5rem;
+  --text-display-xl--line-height: 3.75rem;
+  --text-display-l: 2.5rem;
+  --text-display-l--line-height: 2.875rem;
+  --text-page-title: 2rem;
+  --text-page-title--line-height: 2.375rem;
+  --text-section-title: 1.375rem;
+  --text-section-title--line-height: 1.75rem;
+  --text-panel-title: 1.0625rem;
+  --text-panel-title--line-height: 1.5rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-body-small: 0.875rem;
+  --text-body-small--line-height: 1.375rem;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.125rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.125rem;
+  --text-data-l: 1.75rem;
+  --text-data-l--line-height: 2rem;
+  --text-data-m: 1rem;
+  --text-data-m--line-height: 1.375rem;
+  --text-data-s: 0.8125rem;
+  --text-data-s--line-height: 1.125rem;
+  --text-stamp: 0.6875rem;
+  --text-stamp--line-height: 0.75rem;
+
+  /* Ledger surfaces and ink ---------------------------------------------- */
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-paper-sunken: var(--paper-sunken);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+
+  /* Brand accent --------------------------------------------------------- */
+  --color-brand: var(--accent);
+  --color-brand-hover: var(--accent-hover);
+  --color-brand-contrast: var(--accent-contrast);
+  --color-brand-solid: var(--accent-solid);
+  --color-brass: var(--brass);
+
+  /* Semantic state ------------------------------------------------------- */
+  --color-success: var(--success);
+  --color-success-tint: var(--success-tint);
+  --color-warning: var(--warning);
+  --color-warning-tint: var(--warning-tint);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-danger-solid: var(--danger-solid);
+  --color-focus: var(--focus);
+  --color-selection: var(--selection);
+
+  /* Pipeline stages ------------------------------------------------------ */
+  --color-stage-new: var(--stage-new);
+  --color-stage-new-tint: var(--stage-new-tint);
+  --color-stage-contacted: var(--stage-contacted);
+  --color-stage-contacted-tint: var(--stage-contacted-tint);
+  --color-stage-interested: var(--stage-interested);
+  --color-stage-interested-tint: var(--stage-interested-tint);
+  --color-stage-converted: var(--stage-converted);
+  --color-stage-converted-tint: var(--stage-converted-tint);
+
+  /* Radius (DESIGN.md §5.3) ---------------------------------------------- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --radius-2xl: 6px;
+  --radius-3xl: 6px;
+  --radius-4xl: 6px;
+
+  /* Elevation (DESIGN.md §5.4) ------------------------------------------- */
+  --shadow-overlay: var(--elevation-overlay);
+  --shadow-drag: var(--elevation-drag);
+
+  /* shadcn compatibility layer ------------------------------------------- */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -39,82 +129,170 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 }
 
+/* Light theme — paper and ink (DESIGN.md §3.2) ---------------------------- */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  color-scheme: light;
+
+  /* Ledger tokens */
+  --paper: #f7f3ea;
+  --paper-raised: #fbf8f1;
+  --paper-sunken: #efe9dc;
+  --ink: #1b1a17;
+  --ink-muted: #5c574e;
+  --ink-subtle: #6e685c;
+  --rule: #d8d0bf;
+  --rule-strong: #b9af9a;
+  --accent: #7a2e2e;
+  --accent-hover: #632323;
+  --accent-contrast: #fff9ef;
+  --accent-solid: #7a2e2e;
+  --brass: #b08d57;
+  --success: #2f5d50;
+  --success-tint: #e3ede7;
+  --warning: #7a4e0e;
+  --warning-tint: #f6e8c8;
+  --danger: #a3231f;
+  --danger-tint: #f7e0dc;
+  --danger-solid: #a3231f;
+  --focus: #2f4a5a;
+  --selection: #e8d9b8;
+
+  /* Pipeline stages */
+  --stage-new: #3e5c6b;
+  --stage-new-tint: #e8eef0;
+  --stage-contacted: #7a6226;
+  --stage-contacted-tint: #f0e9d8;
+  --stage-interested: #9a4e22;
+  --stage-interested-tint: #f3e3d8;
+  --stage-converted: #2f5d50;
+  --stage-converted-tint: #e3ede7;
+
+  /* Focus ring geometry */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Elevation */
+  --elevation-overlay: 0 8px 24px rgb(27 26 23 / 0.12);
+  --elevation-drag: 0 12px 28px rgb(27 26 23 / 0.16);
+
+  /* shadcn compatibility */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-contrast);
+  --secondary: var(--paper-sunken);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-sunken);
+  --muted-foreground: var(--ink-muted);
+  --accent-foreground: var(--accent-contrast);
+  --destructive: var(--danger);
+  --border: var(--rule);
+  --input: var(--rule-strong);
+  --ring: var(--focus);
+  --chart-1: var(--stage-new);
+  --chart-2: var(--stage-contacted);
+  --chart-3: var(--stage-interested);
+  --chart-4: var(--stage-converted);
+  --chart-5: var(--brass);
+  --radius: 4px;
+  --sidebar: var(--paper-raised);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--accent-contrast);
+  --sidebar-accent: var(--paper-sunken);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--rule);
+  --sidebar-ring: var(--focus);
 }
 
+/* Dark theme — warm charcoal (DESIGN.md §3.3) ---------------------------- */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
+
+  /* Ledger tokens */
+  --paper: #171614;
+  --paper-raised: #1f1d1a;
+  --paper-sunken: #121110;
+  --ink: #f2ede3;
+  --ink-muted: #b7afa1;
+  --ink-subtle: #948b7d;
+  --rule: #3a352e;
+  --rule-strong: #554e43;
+  --accent: #d08a7e;
+  --accent-hover: #e09a8e;
+  --accent-contrast: #fff6ec;
+  --accent-solid: #8e3a36;
+  --brass: #c9a86f;
+  --success: #7fbfaa;
+  --success-tint: #172722;
+  --warning: #e0b15e;
+  --warning-tint: #2e2410;
+  --danger: #e58a80;
+  --danger-tint: #301b19;
+  --danger-solid: #8e2a26;
+  --focus: #9ec5d6;
+  --selection: #3a2f22;
+
+  /* Pipeline stages */
+  --stage-new: #8fb3c2;
+  --stage-new-tint: #1e2a30;
+  --stage-contacted: #d4b878;
+  --stage-contacted-tint: #2c2718;
+  --stage-interested: #e09a6a;
+  --stage-interested-tint: #2e2118;
+  --stage-converted: #7fbfaa;
+  --stage-converted-tint: #172722;
+
+  /* Elevation */
+  --elevation-overlay: 0 8px 24px rgb(0 0 0 / 0.45);
+  --elevation-drag: 0 12px 28px rgb(0 0 0 / 0.55);
+
+  /*
+   * Compatibility note: a single --primary token cannot serve both
+   * bg-primary (needs --accent-solid) and text-primary (needs --accent).
+   * Phase 1 uses the readable accent and dark paper for foreground so both
+   * existing usages remain accessible. The component phase should use
+   * --accent-solid / --accent for solid buttons and text respectively.
+   */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--accent);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-sunken);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-sunken);
+  --muted-foreground: var(--ink-muted);
+  --accent-foreground: var(--paper);
+  --destructive: var(--danger);
+  --border: var(--rule);
+  --input: var(--rule-strong);
+  --ring: var(--focus);
+  --chart-1: var(--stage-new);
+  --chart-2: var(--stage-contacted);
+  --chart-3: var(--stage-interested);
+  --chart-4: var(--stage-converted);
+  --chart-5: var(--brass);
+  --radius: 4px;
+  --sidebar: var(--paper-raised);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--paper);
+  --sidebar-accent: var(--paper-sunken);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--rule);
+  --sidebar-ring: var(--focus);
 }
 
 @layer base {
@@ -126,6 +304,22 @@
   }
   html {
     @apply font-sans;
+  }
+
+  /* Editorial headings. Body and UI text stay in IBM Plex Sans. */
+  h1,
+  h2 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+  }
+
+  /* Tabular figures wherever the mono role is used. */
+  .font-mono,
+  code,
+  kbd,
+  samp,
+  pre {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -159,13 +353,23 @@ html {
 
 /* Nicer keyboard focus, only for keyboard users */
 :focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus);
+  outline-offset: var(--focus-ring-offset);
 }
 
-/* Subtle text selection */
+/* Text selection uses the ledger's aged-paper tint */
 ::selection {
-  background: color-mix(in oklab, var(--primary) 25%, transparent);
+  background: var(--selection);
+}
+
+/*
+ * Phase 1 bridge: the existing destructive confirmation button pairs
+ * bg-destructive with text-white. On the dark theme's light danger colour,
+ * white would fail contrast. Use paper ink until the component phase adopts
+ * --danger-solid with --danger-solid-foreground.
+ */
+.dark .bg-destructive.text-white {
+  color: var(--paper);
 }
 
 /* Respect users who prefer less motion (covers all animations) */
