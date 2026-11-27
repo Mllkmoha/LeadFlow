@@ -234,13 +234,15 @@ export default async function ActivitiesPage({
           <Link
             href="/activities?filter=OVERDUE"
             className={`rounded-xl border p-3 transition-colors sm:p-4 ${
-              overdueCount > 0 ? "border-rose-500/40 bg-rose-500/5" : "bg-card"
+              overdueCount > 0
+                ? "border-[var(--activity-overdue)]/40 bg-[var(--activity-overdue-tint)]"
+                : "bg-card"
             }`}
           >
             <p className="text-xs text-muted-foreground">Overdue</p>
             <p
               className={`mt-1 text-2xl font-bold tabular-nums ${
-                overdueCount > 0 ? "text-rose-600 dark:text-rose-400" : ""
+                overdueCount > 0 ? "text-[var(--activity-overdue)]" : ""
               }`}
             >
               {overdueCount}
@@ -250,13 +252,15 @@ export default async function ActivitiesPage({
           <Link
             href="/activities?filter=TODAY"
             className={`rounded-xl border p-3 transition-colors sm:p-4 ${
-              dueTodayCount > 0 ? "border-sky-500/40 bg-sky-500/5" : "bg-card"
+              dueTodayCount > 0
+                ? "border-[var(--activity-due-today)]/40 bg-[var(--activity-due-today-tint)]"
+                : "bg-card"
             }`}
           >
             <p className="text-xs text-muted-foreground">Today</p>
             <p
               className={`mt-1 text-2xl font-bold tabular-nums ${
-                dueTodayCount > 0 ? "text-sky-600 dark:text-sky-400" : ""
+                dueTodayCount > 0 ? "text-[var(--activity-due-today)]" : ""
               }`}
             >
               {dueTodayCount}
@@ -347,7 +351,7 @@ export default async function ActivitiesPage({
                   <div
                     key={activity.id}
                     className={`flex items-start gap-2 px-3 py-3 sm:gap-3 sm:px-5 sm:py-4 ${
-                      isOverdue ? "bg-rose-500/5" : ""
+                      isOverdue ? "bg-[var(--activity-overdue-tint)]" : ""
                     }`}
                   >
                     <ActivityCompletionButton
@@ -383,9 +387,9 @@ export default async function ActivitiesPage({
                           <span
                             className={`inline-flex items-center gap-1.5 ${
                               isOverdue
-                                ? "font-medium text-rose-600 dark:text-rose-400"
+                                ? "font-medium text-[var(--activity-overdue)]"
                                 : isToday
-                                  ? "font-medium text-sky-600 dark:text-sky-400"
+                                  ? "font-medium text-[var(--activity-due-today)]"
                                   : ""
                             }`}
                           >
