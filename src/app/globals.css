@@ -86,6 +86,22 @@
   --color-stage-converted: var(--stage-converted);
   --color-stage-converted-tint: var(--stage-converted-tint);
 
+  /* Stage ring tokens (for pipeline column top borders) ------------------ */
+  --color-stage-ring-new: var(--stage-ring-new);
+  --color-stage-ring-contacted: var(--stage-ring-contacted);
+  --color-stage-ring-interested: var(--stage-ring-interested);
+  --color-stage-ring-converted: var(--stage-ring-converted);
+
+  /* Activity state tokens ------------------------------------------------ */
+  --color-activity-overdue: var(--activity-overdue);
+  --color-activity-overdue-tint: var(--activity-overdue-tint);
+  --color-activity-due-today: var(--activity-due-today);
+  --color-activity-due-today-tint: var(--activity-due-today-tint);
+  --color-activity-upcoming: var(--activity-upcoming);
+  --color-activity-upcoming-tint: var(--activity-upcoming-tint);
+  --color-activity-completed: var(--activity-completed);
+  --color-activity-completed-tint: var(--activity-completed-tint);
+
   /* Radius (DESIGN.md §5.3) ---------------------------------------------- */
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -171,6 +187,22 @@
   --stage-converted: #2f5d50;
   --stage-converted-tint: #e3ede7;
 
+  /* Stage ring tokens (for pipeline column top borders) */
+  --stage-ring-new: var(--stage-new);
+  --stage-ring-contacted: var(--stage-contacted);
+  --stage-ring-interested: var(--stage-interested);
+  --stage-ring-converted: var(--stage-converted);
+
+  /* Activity state tokens — not stage tokens */
+  --activity-overdue: var(--danger);
+  --activity-overdue-tint: var(--danger-tint);
+  --activity-due-today: var(--warning);
+  --activity-due-today-tint: var(--warning-tint);
+  --activity-upcoming: var(--stage-new);
+  --activity-upcoming-tint: var(--stage-new-tint);
+  --activity-completed: var(--success);
+  --activity-completed-tint: var(--success-tint);
+
   /* Focus ring geometry */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
@@ -250,6 +282,22 @@
   --stage-interested-tint: #2e2118;
   --stage-converted: #7fbfaa;
   --stage-converted-tint: #172722;
+
+  /* Stage ring tokens (for pipeline column top borders) */
+  --stage-ring-new: var(--stage-new);
+  --stage-ring-contacted: var(--stage-contacted);
+  --stage-ring-interested: var(--stage-interested);
+  --stage-ring-converted: var(--stage-converted);
+
+  /* Activity state tokens — not stage tokens */
+  --activity-overdue: var(--danger);
+  --activity-overdue-tint: var(--danger-tint);
+  --activity-due-today: var(--warning);
+  --activity-due-today-tint: var(--warning-tint);
+  --activity-upcoming: var(--stage-new);
+  --activity-upcoming-tint: var(--stage-new-tint);
+  --activity-completed: var(--success);
+  --activity-completed-tint: var(--success-tint);
 
   /* Elevation */
   --elevation-overlay: 0 8px 24px rgb(0 0 0 / 0.45);
