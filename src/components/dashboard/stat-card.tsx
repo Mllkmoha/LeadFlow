@@ -24,38 +24,38 @@ type StatCardProps = {
 const statStyles = {
   "Total Contacts": {
     icon: Users,
-    color: "text-blue-600 dark:text-blue-400",
-    background: "bg-blue-500/10",
+    color: "text-ink",
+    background: "bg-rule/10",
   },
   "New Leads": {
     icon: UserPlus,
-    color: "text-violet-600 dark:text-violet-400",
-    background: "bg-violet-500/10",
+    color: "text-[var(--stage-new)]",
+    background: "bg-[var(--stage-new-tint)]",
   },
   Interested: {
     icon: Heart,
-    color: "text-amber-600 dark:text-amber-400",
-    background: "bg-amber-500/10",
+    color: "text-[var(--stage-interested)]",
+    background: "bg-[var(--stage-interested-tint)]",
   },
   Converted: {
     icon: CheckCircle2,
-    color: "text-emerald-600 dark:text-emerald-400",
-    background: "bg-emerald-500/10",
+    color: "text-[var(--stage-converted)]",
+    background: "bg-[var(--stage-converted-tint)]",
   },
   Overdue: {
     icon: Clock,
-    color: "text-rose-600 dark:text-rose-400",
-    background: "bg-rose-500/10",
+    color: "text-[var(--activity-overdue)]",
+    background: "bg-[var(--activity-overdue-tint)]",
   },
   "Due Today": {
     icon: CalendarCheck,
-    color: "text-orange-600 dark:text-orange-400",
-    background: "bg-orange-500/10",
+    color: "text-[var(--activity-due-today)]",
+    background: "bg-[var(--activity-due-today-tint)]",
   },
   Upcoming: {
     icon: CalendarDays,
-    color: "text-sky-600 dark:text-sky-400",
-    background: "bg-sky-500/10",
+    color: "text-[var(--activity-upcoming)]",
+    background: "bg-[var(--activity-upcoming-tint)]",
   },
 };
 
@@ -71,7 +71,7 @@ export function StatCard({
   const Icon = style?.icon;
   const card = (
     <Card
-      className={`h-full ${highlight ? "bg-rose-500/5 ring-rose-500/40" : ""}`}
+      className={`h-full ${highlight ? "bg-[var(--danger-tint)] ring-[var(--danger)]/40" : ""}`}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-1 sm:pb-3">
         <CardTitle className="min-w-0 text-xs font-medium text-muted-foreground sm:text-sm">
