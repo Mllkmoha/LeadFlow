@@ -15,26 +15,26 @@ const stages = [
   {
     key: "NEW",
     label: "New",
-    color: "bg-blue-500",
-    textColor: "text-blue-600 dark:text-blue-400",
+    color: "bg-[var(--stage-new)]",
+    textColor: "text-[var(--stage-new)]",
   },
   {
     key: "CONTACTED",
     label: "Contacted",
-    color: "bg-violet-500",
-    textColor: "text-violet-600 dark:text-violet-400",
+    color: "bg-[var(--stage-contacted)]",
+    textColor: "text-[var(--stage-contacted)]",
   },
   {
     key: "INTERESTED",
     label: "Interested",
-    color: "bg-amber-500",
-    textColor: "text-amber-600 dark:text-amber-400",
+    color: "bg-[var(--stage-interested)]",
+    textColor: "text-[var(--stage-interested)]",
   },
   {
     key: "CONVERTED",
     label: "Converted",
-    color: "bg-emerald-500",
-    textColor: "text-emerald-600 dark:text-emerald-400",
+    color: "bg-[var(--stage-converted)]",
+    textColor: "text-[var(--stage-converted)]",
   },
 ] as const;
 
